@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Orbit Drift: Asteroid Fugitive</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #050711;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      color: #fff;
+    }
+    #canvas-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    /* Touch controls overlay */
+    .touch-zone {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50%;
+      z-index: 10;
+      display: flex;
+      align-items: flex-end;
+      padding: 30px;
+      pointer-events: auto;
+    }
+    #touch-left { left: 0; }
+    #touch-right { right: 0; justify-content: flex-end; }
+    .touch-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(0, 240, 255, 0.15);
+      border: 2px solid rgba(0, 240, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #00f0ff;
+      font-weight: bold;
+      font-size: 24px;
+      backdrop-filter: blur(4px);
+      transition: transform 0.1s, background 0.1s;
+      pointer-events: none;
+    }
+    .touch-btn.active {
+      background: rgba(0, 240, 255, 0.45);
+      transform: scale(1.1);
+    }
+    #nitro-btn {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 12;
+      width: 120px;
+      height: 50px;
+      border-radius: 25px;
+      background: rgba(255, 183, 3, 0.2);
+      border: 2px solid #ffb703;
+      color: #ffb703;
+      font-weight: 800;
+      font-size: 15px;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+    #nitro-btn.active {
+      background: rgba(255, 183, 3, 0.6);
+      transform: translateX(-50%) scale(1.05);
+    }
+    /* UI Overlay screens */
+    .screen-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5, 7, 17, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 20;
+      padding: 20px;
+      text-align: center;
+    }
+    .screen-overlay.hidden {
+      display: none;
+    }
+    .logo-title {
+      font-size: clamp(32px, 6vw, 56px);
+      font-weight: 900;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #00f0ff 0%, #ffffff 50%, #d902ee 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
+      text-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+    }
+    .logo-sub {
+      font-size: clamp(14px, 2.5vw, 20px);
+      color: #ff3344;
+      font-weight: 700;
+      letter-spacing: 4px;
+      margin-bottom: 30px;
+    }
+    .instructions-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      border-radius: 16px;
+      padding: 18px 24px;
+      max-width: 480px;
+      width: 100%;
+      margin-bottom: 30px;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #cbd5e1;
+    }
+    .instructions-card strong {
+      color: #00f0ff;
+    }
+    .play-btn {
+      background: linear-gradient(135deg, #00f0ff 0%, #0077ff 100%);
+      color: #050711;
+      font-size: clamp(18px, 3vw, 22px);
+      font-weight: 900;
+      padding: 16px 44px;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 35px rgba(0, 240, 255, 0.9);
+    }
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 4px;
+    }
+    .audio-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 30;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .screen-overlay { overflow-y:auto; justify-content:flex-start; padding:20px; gap:8px; }
+    .screen-overlay > * { flex-shrink:0; }
+    .screen-overlay > :first-child { margin-top:auto; }
+    .screen-overlay > :last-child { margin-bottom:auto; }
+    .screen-overlay .logo-sub { margin-bottom:8px; }
+    .instructions-card { margin-bottom:8px; padding:12px 18px; font-size:13px; }
+    .od-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; width:min(480px,100%); }
+    .od-options label { display:grid; gap:5px; font-size:12px; text-align:left; }
+    select { min-width:0; width:100%; padding:8px; color:white; background:#152238; border:1px solid #47a8bd; border-radius:8px; }
+    .od-small { font-size:12px; line-height:1.4; max-width:480px; color:#cbd5e1; }
+    #od-status { display: none !important; }
+    #flight-menu { position:absolute; z-index:15; bottom:94px; left:50%; transform:translateX(-50%); }
+    #canvas-container:has(#startScreen.hidden):has(#gameOverScreen.hidden) #audioBtn { top:auto !important; bottom:142px; right:50% !important; transform:translateX(50%); }
+    .hidden { display:none !important; }
+    .pause-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 30;
+      background: rgba(10, 20, 40, 0.7);
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 8px;
+      color: #00f0ff;
+      padding: 7px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+      transition: background 0.15s, transform 0.15s, border-color 0.15s;
+    }
+    .pause-toggle:hover {
+      background: rgba(0, 240, 255, 0.25);
+      border-color: #00f0ff;
+      transform: scale(1.05);
+    }
+    @media(max-width:600px){.touch-zone{padding:20px}.touch-btn{width:66px;height:66px}.pause-toggle{padding:6px 10px;font-size:12px;top:12px;right:12px;}}
+    @media(max-height:700px){.screen-overlay{padding:12px;gap:6px}.logo-title{font-size:30px}.instructions-card{font-size:12px;padding:8px 12px}.logo-sub{font-size:14px}.play-btn{padding:12px 25px}}
+  </style>
+</head>
+<body>
+  <div id="canvas-container">
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- Audio toggle -->
+    <button id="audioBtn" class="audio-toggle">🔊 Sound: ON</button>
+
+    <!-- Pause toggle button -->
+    <button id="pauseBtn" class="pause-toggle hidden">⏸ PAUSE</button>
+
+    <!-- Touch overlay -->
+    <div id="touch-left" class="touch-zone">
+      <div class="touch-btn" id="btn-left">◀</div>
+    </div>
+    <div id="touch-right" class="touch-zone">
+      <div class="touch-btn" id="btn-right">▶</div>
+    </div>
+    <div id="nitro-btn">NITRO [W]</div>
+
+    <div id="od-status" class="hidden" aria-live="polite"></div><button id="flight-menu" class="hidden od-secondary">MENU</button>
+    <!-- Start screen overlay -->
+    <div id="startScreen" class="screen-overlay">
+      <div class="logo-title">ORBIT DRIFT</div>
+      <div class="logo-sub">ASTEROID FUGITIVE</div>
+      
+      <div class="instructions-card">
+        <p style="margin-bottom: 10px;">🚨 <strong>NO WEAPONS ON BOARD!</strong> 🚨</p>
+        <p>• <strong>Steer Left / Right</strong> to drift through the asteroid belt.</p>
+        <p>• <strong>Phase Shift (Player Exclusive):</strong> Dive through screen edges to wrap around! Drones <strong>cannot wrap</strong> and will smash into the perimeter barrier!</p>
+        <p>• Bait pursuing police drones into <strong>ramming each other</strong> or smashing into <strong>asteroids</strong>!</p>
+        <p>• Chain artifacts, near misses, and crashes for combo points.</p>
+        <p>• Grab coins, gems, timed relics, shields, slow-time, and magnets.</p>
+        <p>• Collect floating <strong>Energy Orbs</strong> to unleash <strong>QUANTUM OVERDRIVE</strong>!</p>
+        <p style="margin-top: 10px; font-size: 12px; color: #94a3b8;">Controls: <strong>A / D</strong> or <strong>Arrow Keys</strong> (Keyboard) | <strong>Tap Left / Right Screen</strong> (Mobile) | <strong>ESC / P</strong> (Pause)</p>
+      </div>
+
+      <div class="od-options">
+        <label>Difficulty<select id="difficulty"><option value="relaxed">Relaxed</option><option value="normal" selected>Normal</option><option value="challenge">Challenge</option></select></label>
+        <label>Arena<select id="arena-theme"><option value="nebula">Nebula</option><option value="aurora">Aurora</option><option value="ember">Ember belt</option></select></label>
+        <label>Ship<select id="ship-style"><option value="classic">Classic</option><option value="neon">Neon</option><option value="gold">Gold</option></select></label>
+      </div><p id="mode-best"></p><p id="unlock-info" class="od-small"></p>
+      <button id="training" class="od-secondary">LEARN TO PLAY · INVINCIBLE</button>
+      <button id="startBtn" class="play-btn">LAUNCH MISSION</button>
+    </div>
+
+    <!-- Pause screen overlay -->
+    <div id="pauseScreen" class="screen-overlay hidden">
+      <div class="logo-title" style="background: linear-gradient(135deg, #00f0ff, #d902ee); -webkit-background-clip: text;">SYSTEMS SUSPENDED</div>
+      <div class="logo-sub">FLIGHT PAUSED</div>
+      
+      <div class="instructions-card" style="max-width: 380px;">
+        <div class="stat-row"><span>Current Score:</span><strong id="pauseScore" style="color:#00f0ff;">0</strong></div>
+        <div class="stat-row"><span>Flight Time:</span><strong id="pauseTime" style="color:#cbd5e1;">0s</strong></div>
+        <div class="stat-row"><span>Active Threats:</span><strong id="pauseThreats" style="color:#ff3344;">0</strong></div>
+        <div class="stat-row"><span>Objective:</span><strong id="pauseMission" style="color:#ffe600; font-size:12px;">IN PROGRESS</strong></div>
+      </div>
+
+      <button id="resumeBtn" class="play-btn">RESUME MISSION [ESC]</button>
+      <button id="pauseAbortBtn" class="od-secondary" style="margin-top:6px;">ABORT TO MENU</button>
+    </div>
+
+    <!-- Game Over overlay -->
+    <div id="gameOverScreen" class="screen-overlay hidden">
+      <div class="logo-title" style="background: linear-gradient(135deg, #ff3344, #ffb703); -webkit-background-clip: text;">SHIP DESTROYED</div>
+      <div class="logo-sub">FUGITIVE APPREHENDED</div>
+      
+      <div class="instructions-card" style="max-width: 380px;">
+        <div class="stat-row"><span>Final Score:</span><strong id="finalScore" style="color:#00f0ff;">0</strong></div>
+        <div class="stat-row"><span>Best High Score:</span><strong id="highScore" style="color:#ffe600;">0</strong></div>
+        <div class="stat-row"><span>Drones Baited & Destroyed:</span><strong id="dronesDestroyed" style="color:#ff3344;">0</strong></div>
+        <div class="stat-row"><span>Near-Miss Dodges:</span><strong id="nearMissCount" style="color:#00f0ff;">0</strong></div>
+        <div class="stat-row"><span>Survival Time:</span><strong id="survivalTime" style="color:#cbd5e1;">0s</strong></div>
+      </div>
+
+      <p id="result-cause"></p><p id="score-breakdown" class="od-small"></p><p id="best-gap"></p>
+      <button id="result-menu" class="od-secondary">MENU / CHANGE MODE</button>
+      <button id="restartBtn" class="play-btn">RETRY (1-TAP)</button>
+    </div>
+  </div>
+
+  <script src="./enhancements.js?v=3"></script>
+  <script>
+    /* ==========================================================================
+       ORBIT DRIFT: ASTEROID FUGITIVE - ENGINE CORE
+       ========================================================================== */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Elements
+    const startScreen = document.getElementById('startScreen');
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    const startBtn = document.getElementById('startBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const audioBtn = document.getElementById('audioBtn');
+    const btnLeft = document.getElementById('btn-left');
+    const btnRight = document.getElementById('btn-right');
+    const nitroBtn = document.getElementById('nitro-btn');
+    const finalScoreEl = document.getElementById('finalScore');
+    const highScoreEl = document.getElementById('highScore');
+    const dronesDestroyedEl = document.getElementById('dronesDestroyed');
+    const nearMissCountEl = document.getElementById('nearMissCount');
+    const survivalTimeEl = document.getElementById('survivalTime');
+    const pauseScreen = document.getElementById('pauseScreen');
+    const pauseBtn = document.getElementById('pauseBtn');
+    const resumeBtn = document.getElementById('resumeBtn');
+    const pauseAbortBtn = document.getElementById('pauseAbortBtn');
+    const pauseScoreEl = document.getElementById('pauseScore');
+    const pauseTimeEl = document.getElementById('pauseTime');
+    const pauseThreatsEl = document.getElementById('pauseThreats');
+    const pauseMissionEl = document.getElementById('pauseMission');
+
+    // Viewport & Scale (DPR capped at 2.0 to prevent mobile GPU fill-rate throttling)
+    let W = 0, H = 0;
+    let dpr = 1;
+    function resize() {
+      const logicalW = window.innerWidth;
+      const logicalH = window.innerHeight;
+      dpr = Math.min(window.devicePixelRatio || 1, 2.0);
+
+      canvas.width = Math.floor(logicalW * dpr);
+      canvas.height = Math.floor(logicalH * dpr);
+      canvas.style.width = logicalW + 'px';
+      canvas.style.height = logicalH + 'px';
+
+      W = logicalW;
+      H = logicalH;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // Touch Haptics API Helper (tactile vibration for mobile browsers)
+    function triggerHaptic(pattern) {
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        try {
+          navigator.vibrate(pattern);
+        } catch(e) {}
+      }
+    }
+
+    // Sound Synthesizer (Web Audio API)
+    // Sound Synthesizer (Web Audio API)
+    class SoundSynth {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+        this.engineOsc = null;
+        this.engineGain = null;
+        this.engineFilter = null;
+        this.engineRunning = false;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      startEngine() {
+        if (this.muted || !this.ctx || this.engineRunning) return;
+        try {
+          if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+          }
+          this.engineOsc = this.ctx.createOscillator();
+          this.engineGain = this.ctx.createGain();
+          this.engineFilter = this.ctx.createBiquadFilter();
+
+          this.engineOsc.type = 'triangle';
+          this.engineOsc.frequency.setValueAtTime(52, this.ctx.currentTime);
+
+          this.engineFilter.type = 'lowpass';
+          this.engineFilter.frequency.setValueAtTime(220, this.ctx.currentTime);
+          this.engineFilter.Q.setValueAtTime(2.5, this.ctx.currentTime);
+
+          this.engineGain.gain.setValueAtTime(0.0001, this.ctx.currentTime);
+          this.engineGain.gain.linearRampToValueAtTime(0.07, this.ctx.currentTime + 0.15);
+
+          this.engineOsc.connect(this.engineFilter);
+          this.engineFilter.connect(this.engineGain);
+          this.engineGain.connect(this.ctx.destination);
+
+          this.engineOsc.start();
+          this.engineRunning = true;
+        } catch(e) {}
+      }
+      updateEngine(speedRatio = 0, isDrifting = false, isNitro = false, isOverdrive = false) {
+        if (this.muted || !this.ctx || !this.engineRunning || !this.engineOsc) return;
+        try {
+          const now = this.ctx.currentTime;
+          let targetFreq = 50 + speedRatio * 35; // 50Hz to 85Hz cruising
+          let targetCutoff = 200 + speedRatio * 180;
+          let targetGain = 0.06 + speedRatio * 0.03;
+
+          if (isDrifting) {
+            targetFreq += 18;
+            targetCutoff += 280; // Whooshing ion slip
+            targetGain += 0.025;
+          }
+          if (isNitro) {
+            targetFreq += 35;
+            targetCutoff += 380;
+            targetGain += 0.035;
+          }
+          if (isOverdrive) {
+            targetFreq += 55;
+            targetCutoff += 650;
+            targetGain += 0.045;
+          }
+
+          this.engineOsc.frequency.setTargetAtTime(targetFreq, now, 0.05);
+          this.engineFilter.frequency.setTargetAtTime(targetCutoff, now, 0.06);
+          this.engineGain.gain.setTargetAtTime(targetGain, now, 0.05);
+        } catch(e) {}
+      }
+      stopEngine() {
+        if (!this.engineRunning || !this.ctx) return;
+        try {
+          const now = this.ctx.currentTime;
+          if (this.engineGain) {
+            this.engineGain.gain.linearRampToValueAtTime(0.0001, now + 0.08);
+          }
+          const osc = this.engineOsc;
+          setTimeout(() => {
+            try { if (osc) osc.stop(); } catch(e){}
+          }, 100);
+          this.engineRunning = false;
+          this.engineOsc = null;
+          this.engineGain = null;
+          this.engineFilter = null;
+        } catch(e) {
+          this.engineRunning = false;
+        }
+      }
+      playTone(freq, type, duration, gainStart = 0.2, freqEnd = null) {
+        if (this.muted || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          if (freqEnd) {
+            osc.frequency.exponentialRampToValueAtTime(freqEnd, this.ctx.currentTime + duration);
+          }
+          gain.gain.setValueAtTime(gainStart, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch(e){}
+      }
+      playExplosion() {
+        if (this.muted || !this.ctx) return;
+        this.playTone(180, 'sawtooth', 0.4, 0.35, 30);
+      }
+      playNearMiss() {
+        if (this.muted || !this.ctx) return;
+        this.playTone(880, 'sine', 0.15, 0.25, 1400);
+      }
+      playPickup() {
+        if (this.muted || !this.ctx) return;
+        this.playTone(523, 'triangle', 0.2, 0.2, 1046);
+      }
+      playOverdrive() {
+        if (this.muted || !this.ctx) return;
+        this.playTone(220, 'square', 0.6, 0.3, 880);
+      }
+    }
+    const sound = new SoundSynth();
+
+    audioBtn.addEventListener('click', () => {
+      sound.init();
+      sound.muted = !sound.muted;
+      audioBtn.textContent = sound.muted ? '🔇 Sound: OFF' : '🔊 Sound: ON';
+      if (sound.muted) {
+        sound.stopEngine();
+      } else if (gameState === 'PLAYING') {
+        sound.startEngine();
+      }
+    });
+
+    // Image Asset Loader with Procedural Fallbacks
+    const assets = {
+      player: new Image(),
+      enemy: new Image(),
+      asteroid: new Image(),
+      bg: new Image(),
+      loaded: 0
+    };
+    assets.player.src = 'assets/sprites/player_scout.png';
+    assets.enemy.src = 'assets/sprites/enemy_interceptor.png';
+    assets.asteroid.src = 'assets/sprites/asteroid_rock.png';
+    assets.bg.src = 'assets/backgrounds/space_nebula.jpg';
+
+    // Game State
+    let gameState = 'START'; // START, PLAYING, GAMEOVER
+    let score = 0;
+    let highScore = odSave.records.normal;
+    let sessionDronesDestroyed = 0;
+    let sessionNearMisses = 0;
+    let gameStartTime = 0;
+    let screenShake = 0;
+    let nearMissFlash = 0;
+    let comboCount = 0;
+    let comboTimer = 0;
+    let runTime = 0;
+    let nextGravityWellAt = 20;
+
+    // Input Manager
+    const input = {
+      left: false,
+      right: false,
+      nitro: false
+    };
+
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+        if (gameState === 'PLAYING') {
+          pauseGame();
+          return;
+        } else if (gameState === 'PAUSED') {
+          resumeGame();
+          return;
+        }
+      }
+      if (gameState === 'PAUSED' && (e.key === ' ' || e.key === 'Enter')) {
+        resumeGame();
+        return;
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') input.left = true;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') input.right = true;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.key === ' ') input.nitro = true;
+    });
+    window.addEventListener('keyup', e => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') input.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') input.right = false;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.key === ' ') input.nitro = false;
+    });
+
+    // Touch listeners
+    const touchLeft = document.getElementById('touch-left');
+    const touchRight = document.getElementById('touch-right');
+
+    function bindTouch(element, btnEl, keyName) {
+      const set = (val) => {
+        input[keyName] = val;
+        btnEl.classList.toggle('active', val);
+      };
+      element.addEventListener('touchstart', (e) => { e.preventDefault(); set(true); });
+      element.addEventListener('touchend', (e) => { e.preventDefault(); set(false); });
+      element.addEventListener('mousedown', (e) => { set(true); });
+      element.addEventListener('mouseup', (e) => { set(false); });
+    }
+    bindTouch(touchLeft, btnLeft, 'left');
+    bindTouch(touchRight, btnRight, 'right');
+
+    nitroBtn.addEventListener('touchstart', (e) => { e.preventDefault(); input.nitro = true; nitroBtn.classList.add('active'); });
+    nitroBtn.addEventListener('touchend', (e) => { e.preventDefault(); input.nitro = false; nitroBtn.classList.remove('active'); });
+    nitroBtn.addEventListener('mousedown', () => { input.nitro = true; nitroBtn.classList.add('active'); });
+    nitroBtn.addEventListener('mouseup', () => { input.nitro = false; nitroBtn.classList.remove('active'); });
+
+    // Entities
+    let player;
+    let drones = [];
+    let asteroids = [];
+    let particles = [];
+    let shockwaves = [];
+    let skidMarks = [];
+    let pickups = [];
+    let floatingTexts = [];
+    let gravWells = [];
+    let waveTimer = 0;
+    let spawnCounter = 0;
+
+    // Player Ship Definition
+    class PlayerShip {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = -80; // Gentle initial forward drift
+        this.angle = -Math.PI / 2;
+        this.baseSpeed = 205; // Starts noticeably slower for comfortable orientation
+        this.maxSpeed = 280;
+        this.turnRate = 3.6; // radians / sec
+        this.driftGrip = 4.2; // grip traction
+        this.radius = 18;
+        this.trail = [];
+        this.nitroFuel = 100;
+        this.overdriveEnergy = 0;
+        this.isOverdrive = false;
+        this.overdriveTimer = 0;
+        this.launchShield = 3.0; // 3-second launch grace period!
+        this.lastLeftWing = null;
+        this.lastRightWing = null;
+        this.isDrifting = false;
+      }
+
+      update(dt) {
+        // Launch grace period timer
+        if (this.launchShield > 0) {
+          this.launchShield = Math.max(0, this.launchShield - dt);
+        }
+
+        // Smooth speed ramp: starts gentle at 205 px/s and ramps to 280 px/s over first 14s
+        const speedRamp = Math.min(1.0, runTime / 14.0);
+        this.baseSpeed = 205 + speedRamp * 75;
+
+        // Steer left/right
+        if (input.left) this.angle -= this.turnRate * dt;
+        if (input.right) this.angle += this.turnRate * dt;
+
+        // Nitro handling
+        let curSpeed = this.baseSpeed;
+        if (input.nitro && this.nitroFuel > 0) {
+          curSpeed *= 1.65;
+          this.nitroFuel = Math.max(0, this.nitroFuel - 45 * dt);
+        } else {
+          this.nitroFuel = Math.min(100, this.nitroFuel + 18 * dt);
+        }
+
+        // Overdrive state
+        if (this.isOverdrive) {
+          curSpeed *= 1.85;
+          this.overdriveTimer -= dt;
+          if (this.overdriveTimer <= 0) {
+            this.isOverdrive = false;
+          }
+        }
+
+        // Forward vector
+        const fwdX = Math.cos(this.angle) * curSpeed;
+        const fwdY = Math.sin(this.angle) * curSpeed;
+
+        // Inertial drift interpolation
+        this.vx += (fwdX - this.vx) * this.driftGrip * dt;
+        this.vy += (fwdY - this.vy) * this.driftGrip * dt;
+
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+
+        // Continuous Toroidal Screen Wrap: wrap instantly when crossing boundary
+        let wrapped = false;
+        if (this.x < 0) { this.x += W; wrapped = true; }
+        if (this.x >= W) { this.x -= W; wrapped = true; }
+        if (this.y < 0) { this.y += H; wrapped = true; }
+        if (this.y >= H) { this.y -= H; wrapped = true; }
+
+        if (wrapped) {
+          // Quantum Phase Shift breaks pursuit line: drones lose lock and charge forward into perimeter barrier!
+          for (let d of drones) {
+            d.sensorConfusion = 1.3;
+          }
+          createBorderSparks(this.x, this.y);
+          shockwaves.push(new ShockwaveRing(this.x, this.y, '#00f0ff', 65, 0.35, 3));
+          floatingTexts.push(new FloatingText(this.x, this.y - 30, '⚡ PHASE SHIFT!', '#00f0ff'));
+          sound.playPickup();
+          this.lastLeftWing = null;
+          this.lastRightWing = null;
+        }
+
+        // Ribbon trail history
+        this.trail.push({ x: this.x, y: this.y, alpha: 1.0 });
+        if (this.trail.length > 22) this.trail.shift();
+        this.trail.forEach(t => t.alpha -= dt * 1.5);
+
+        // Check speed & drift slip angle (heading vs actual motion vector)
+        const currentSpeed = Math.hypot(this.vx, this.vy);
+        const speedRatio = Math.min(1.0, currentSpeed / (this.maxSpeed * 1.65));
+
+        let isDrifting = false;
+        if (currentSpeed > 90) {
+          const moveAngle = Math.atan2(this.vy, this.vx);
+          let angleDiff = Math.abs(this.angle - moveAngle);
+          while (angleDiff > Math.PI) angleDiff = Math.abs(angleDiff - Math.PI * 2);
+          if (angleDiff > 0.42 || ((input.left || input.right) && (input.nitro || this.isOverdrive))) {
+            isDrifting = true;
+          }
+        }
+        this.isDrifting = isDrifting;
+
+        // Wingtip lateral thruster coordinates
+        const rear = -11;
+        const span = 15;
+        const cosA = Math.cos(this.angle);
+        const sinA = Math.sin(this.angle);
+        const perpX = -sinA;
+        const perpY = cosA;
+
+        const lx = this.x + cosA * rear - perpX * span;
+        const ly = this.y + sinA * rear - perpY * span;
+        const rx = this.x + cosA * rear + perpX * span;
+        const ry = this.y + sinA * rear + perpY * span;
+
+        if (isDrifting && !wrapped && this.lastLeftWing && this.lastRightWing) {
+          const dWing = Math.hypot(lx - this.lastLeftWing.x, ly - this.lastLeftWing.y);
+          if (dWing < 40) {
+            const skidColor = this.isOverdrive ? '#d902ee' : (odStyle === 'gold' ? '#ffe066' : '#00f0ff');
+            const skidWidth = this.isOverdrive ? 3.5 : (input.nitro ? 3.0 : 2.2);
+            skidMarks.push(new SkidSegment(this.lastLeftWing.x, this.lastLeftWing.y, lx, ly, skidColor, skidWidth, 1.4));
+            skidMarks.push(new SkidSegment(this.lastRightWing.x, this.lastRightWing.y, rx, ry, skidColor, skidWidth, 1.4));
+
+            // Ion drift vapor particles
+            if (Math.random() < 0.3) {
+              const outerX = input.left ? rx : lx;
+              const outerY = input.left ? ry : ly;
+              particles.push(new Particle(
+                outerX, outerY,
+                -this.vx * 0.2 + (Math.random() - 0.5) * 25,
+                -this.vy * 0.2 + (Math.random() - 0.5) * 25,
+                skidColor,
+                Math.random() * 2 + 1.5,
+                0.35
+              ));
+            }
+          }
+        }
+
+        if (isDrifting && !wrapped) {
+          this.lastLeftWing = { x: lx, y: ly };
+          this.lastRightWing = { x: rx, y: ry };
+        } else {
+          this.lastLeftWing = null;
+          this.lastRightWing = null;
+        }
+
+        // Update dynamic procedural engine audio
+        sound.updateEngine(speedRatio, isDrifting, input.nitro && this.nitroFuel > 0, this.isOverdrive);
+
+        // Thruster sparks emitter
+        if (Math.random() < 0.8) {
+          const rearDist = -20;
+          const px = this.x + Math.cos(this.angle) * rearDist;
+          const py = this.y + Math.sin(this.angle) * rearDist;
+          particles.push(new Particle(
+            px, py,
+            -Math.cos(this.angle) * (100 + Math.random() * 80) + (Math.random() - 0.5) * 40,
+            -Math.sin(this.angle) * (100 + Math.random() * 80) + (Math.random() - 0.5) * 40,
+            this.isOverdrive ? '#d902ee' : '#00f0ff',
+            3,
+            0.35
+          ));
+        }
+      }
+
+      drawShipBody(ox, oy) {
+        ctx.save();
+        if(odStyle!=='classic')ctx.filter=odStyle==='gold'?'sepia(.9) saturate(2)':'hue-rotate(95deg)';
+        ctx.translate(ox, oy);
+        ctx.rotate(this.angle + Math.PI / 2); // sprite points up
+
+        // Overdrive aura
+        if (this.isOverdrive) {
+          ctx.beginPath();
+          ctx.arc(0, 0, 36, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(217, 2, 238, 0.25)';
+          ctx.fill();
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#00f0ff';
+          ctx.stroke();
+        }
+
+        // Launch Grace Shield (protective barrier during start)
+        if (this.launchShield > 0 || odShield) {
+          const pulse = 1 + Math.sin(performance.now() * 0.012) * 0.08;
+          ctx.beginPath();
+          ctx.arc(0, 0, 32 * pulse, 0, Math.PI * 2);
+          const shieldAlpha = odShield ? 1 : Math.min(1.0, this.launchShield);
+          ctx.strokeStyle = `rgba(0, 240, 255, ${0.8 * shieldAlpha})`;
+          ctx.lineWidth = 2.5;
+          ctx.setLineDash([6, 4]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        // Draw Player Sprite
+        if (assets.player.complete && assets.player.naturalWidth > 0) {
+          const sz = 54;
+          ctx.drawImage(assets.player, -sz / 2, -sz / 2, sz, sz);
+        } else {
+          // Fallback vector triangle
+          ctx.fillStyle = '#00f0ff';
+          ctx.beginPath();
+          ctx.moveTo(0, -22);
+          ctx.lineTo(16, 18);
+          ctx.lineTo(0, 10);
+          ctx.lineTo(-16, 18);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+
+      draw() {
+        // Draw ribbon trail with toroidal wrap break
+        if (this.trail.length > 1) {
+          ctx.beginPath();
+          for (let i = 0; i < this.trail.length; i++) {
+            if (i === 0) {
+              ctx.moveTo(this.trail[i].x, this.trail[i].y);
+            } else {
+              const dx = this.trail[i].x - this.trail[i - 1].x;
+              const dy = this.trail[i].y - this.trail[i - 1].y;
+              if (dx * dx + dy * dy > 14400) {
+                ctx.moveTo(this.trail[i].x, this.trail[i].y);
+              } else {
+                ctx.lineTo(this.trail[i].x, this.trail[i].y);
+              }
+            }
+          }
+          ctx.strokeStyle = this.isOverdrive ? 'rgba(217, 2, 238, 0.4)' : 'rgba(0, 240, 255, 0.35)';
+          if(odStyle!=='classic')ctx.strokeStyle=odStyle==='gold'?'#ffcc6688':'#ce66ff88';
+          ctx.lineWidth = this.isOverdrive ? 10 : 6;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+        }
+
+        // 1. Render primary ship body
+        this.drawShipBody(this.x, this.y);
+
+        // 2. Seamless Early Toroidal Projection:
+        // As you approach any edge, a phantom clone already emerges on the opposite side!
+        const margin = 70;
+        const nearLeft = this.x < margin;
+        const nearRight = this.x > W - margin;
+        const nearTop = this.y < margin;
+        const nearBottom = this.y > H - margin;
+
+        if (nearLeft) this.drawShipBody(this.x + W, this.y);
+        if (nearRight) this.drawShipBody(this.x - W, this.y);
+        if (nearTop) this.drawShipBody(this.x, this.y + H);
+        if (nearBottom) this.drawShipBody(this.x, this.y - H);
+
+        // Corner wrap projections
+        if (nearLeft && nearTop) this.drawShipBody(this.x + W, this.y + H);
+        if (nearLeft && nearBottom) this.drawShipBody(this.x + W, this.y - H);
+        if (nearRight && nearTop) this.drawShipBody(this.x - W, this.y + H);
+        if (nearRight && nearBottom) this.drawShipBody(this.x - W, this.y - H);
+      }
+    }
+
+    // Enemy Hunter Drone
+    class Drone {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = 0;
+        this.vy = 0;
+        this.angle = Math.random() * Math.PI * 2;
+        this.baseDroneSpeed = 275 + Math.random() * 40; this.speed = this.baseDroneSpeed * .65; this.warning = 1.2; this.phase = 0; // faster than player base speed!
+        this.turnRate = 2.4; // turns slower than player (key for baiting!)
+        this.radius = 16;
+        this.sensorConfusion = 0;
+        this.nearMissChecked = false;
+        this.nearMissArmed = true;
+        this.type = 'interceptor';
+      }
+
+      update(dt) {
+        if(this.warning>0){this.warning=Math.max(0,this.warning-dt);return;}
+        this.phase+=dt;
+        const ramp=Math.min(1,Math.max(0,runTime-25)/95);
+
+        // In-bounds direct pursuit vectors: available in full update scope
+        const toPlayerX = player.x - this.x;
+        const toPlayerY = player.y - this.y;
+        const dist = Math.hypot(toPlayerX, toPlayerY);
+
+        if (this.sensorConfusion > 0) {
+          // Phase Shift broke tracking lock: drone maintains current heading and slams into the perimeter barrier!
+          this.sensorConfusion = Math.max(0, this.sensorConfusion - dt);
+        } else {
+          // Predictive pursuit: lead player along direct in-bounds vector
+          const leadTime = Math.min(.18 + ramp * .32, dist / this.speed);
+          let targetDx = toPlayerX + player.vx * leadTime;
+          let targetDy = toPlayerY + player.vy * leadTime;
+
+          // Angle to target
+          let desiredAngle = Math.atan2(targetDy, targetDx);
+          if(this.type==='patrol')desiredAngle=this.phase*.25+this.patrolAngle;
+          if(this.type==='charger') { const phase=this.phase%4; if(phase>=1.2)desiredAngle=this.angle; this.speed*=phase<1.2?.12:phase<2.5?1.65:.65; }
+          let diff = desiredAngle - this.angle;
+          while (diff < -Math.PI) diff += Math.PI * 2;
+          while (diff > Math.PI) diff -= Math.PI * 2;
+
+          // Turn towards target with inertia lag
+          this.angle += Math.sign(diff) * Math.min(Math.abs(diff), this.turnRate * (.55 + ramp*.45) * dt);
+        }
+
+        this.vx = Math.cos(this.angle) * this.speed;
+        this.vy = Math.sin(this.angle) * this.speed;
+
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+
+        // Drones CANNOT wrap! They crash into the arena perimeter containment barrier
+        const borderMargin = this.radius;
+        if (this.x <= borderMargin || this.x >= W - borderMargin || this.y <= borderMargin || this.y >= H - borderMargin) {
+          if (this.type === 'rammer') {
+            // Heavy rammers are armored: bounce hard with sparks and screen shake
+            if (this.x < borderMargin) { this.x = borderMargin; this.vx = Math.abs(this.vx) * 0.7; }
+            if (this.x > W - borderMargin) { this.x = W - borderMargin; this.vx = -Math.abs(this.vx) * 0.7; }
+            if (this.y < borderMargin) { this.y = borderMargin; this.vy = Math.abs(this.vy) * 0.7; }
+            if (this.y > H - borderMargin) { this.y = H - borderMargin; this.vy = -Math.abs(this.vy) * 0.7; }
+            this.angle = Math.atan2(this.vy, this.vx);
+            createBorderSparks(this.x, this.y);
+            screenShake = Math.max(screenShake, 0.2);
+          } else {
+            // Interceptors, Chargers, Patrols smash into the perimeter barrier and EXPLODE!
+            const hitX = Math.max(borderMargin, Math.min(W - borderMargin, this.x));
+            const hitY = Math.max(borderMargin, Math.min(H - borderMargin, this.y));
+            createExplosion(hitX, hitY, '#ff3344', 32);
+            awardCombo(350, 'BARRIER SMASH!', hitX, hitY, '#ffb703');
+            sessionDronesDestroyed++;
+            pickups.push(new Pickup(hitX, hitY));
+            this.dead = true;
+            return;
+          }
+        }
+
+        // Near-Miss check
+        if (dist > 90) this.nearMissArmed = true;
+        if (this.nearMissArmed && dist < 42 && dist > player.radius + this.radius) {
+          this.nearMissChecked = true;
+          this.nearMissArmed = false;
+          sessionNearMisses++;
+          awardCombo(150, '+150 NEAR MISS!', this.x, this.y - 20, '#00f0ff');
+          nearMissFlash = 0.2;
+          sound.playNearMiss();
+          triggerHaptic(25);
+        }
+      }
+
+      draw() {
+        if(drawDroneCue(this))return;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle + Math.PI / 2);
+        if(this.type==='patrol')ctx.filter='hue-rotate(140deg)';
+        if(this.type==='charger')ctx.filter='hue-rotate(260deg)';
+
+        if (assets.enemy.complete && assets.enemy.naturalWidth > 0) {
+          const sz = 46;
+          ctx.drawImage(assets.enemy, -sz / 2, -sz / 2, sz, sz);
+        } else {
+          // Fallback crimson vector drone
+          ctx.fillStyle = '#ff3344';
+          ctx.beginPath();
+          ctx.moveTo(0, -18);
+          ctx.lineTo(14, 16);
+          ctx.lineTo(-14, 16);
+          ctx.closePath();
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    // Heavy pursuer: difficult to out-turn, but it deflects smaller interceptors.
+    class HeavyRammer extends Drone {
+      constructor(x, y) {
+        super(x, y);
+        this.type = 'rammer';
+        this.baseDroneSpeed = 230; this.speed = 150;
+        this.turnRate = 1.45;
+        this.radius = 30;
+        this.mass = 3;
+      }
+      draw() {
+        if(drawDroneCue(this))return;
+        ctx.save();ctx.translate(this.x,this.y);ctx.rotate(this.angle+Math.PI/2);
+        ctx.fillStyle = '#25263a';
+        ctx.beginPath(); ctx.moveTo(0, -31); ctx.lineTo(27, 24); ctx.lineTo(-27, 24); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = '#ffb703';
+        ctx.fillRect(-18, -5, 36, 11);
+        ctx.strokeStyle = '#171824'; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.moveTo(-18, -10); ctx.lineTo(18, 10); ctx.moveTo(18, -10); ctx.lineTo(-18, 10); ctx.stroke();
+        ctx.fillStyle = '#ff7b26'; ctx.fillRect(-10, 19, 20, 8);
+        ctx.restore();
+      }
+    }
+
+    // Asteroid Hazard
+    class Asteroid {
+      constructor(x, y, radius) {
+        this.x = x;
+        this.y = y;
+        this.radius = radius || (30 + Math.random() * 30);
+        this.vx = (Math.random() - 0.5) * 30;
+        this.vy = (Math.random() - 0.5) * 30;
+        this.rot = Math.random() * Math.PI * 2;
+        this.rotSpeed = (Math.random() - 0.5) * 0.8;
+      }
+
+      update(dt) {
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+        this.rot += this.rotSpeed * dt;
+
+        // Boundary wrap
+        const pad = this.radius + 10;
+        if (this.x < -pad) this.x = W + pad;
+        if (this.x > W + pad) this.x = -pad;
+        if (this.y < -pad) this.y = H + pad;
+        if (this.y > H + pad) this.y = -pad;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rot);
+
+        if (assets.asteroid.complete && assets.asteroid.naturalWidth > 0) {
+          const sz = this.radius * 2.1;
+          ctx.drawImage(assets.asteroid, -sz / 2, -sz / 2, sz, sz);
+        } else {
+          ctx.fillStyle = '#334155';
+          ctx.beginPath();
+          ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.strokeStyle = '#64748b';
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    }
+
+    // Periodic gravity hazard. It bends velocity rather than teleporting entities.
+    class GravityWell {
+      constructor(x, y) {
+        this.x = x; this.y = y; this.radius = 46; this.life = 8;
+        this.strength = 2600000; this.spin = Math.random() * Math.PI * 2;
+      }
+      update(dt) { this.life -= dt; this.spin += dt * 3; }
+      apply(entity, dt) {
+        const dx = this.x - entity.x, dy = this.y - entity.y;
+        const d2 = dx * dx + dy * dy + 1600;
+        const d = Math.sqrt(d2); const accel = Math.min(760, this.strength / d2);
+        entity.vx += dx / d * accel * dt; entity.vy += dy / d * accel * dt;
+      }
+      draw() {
+        const pulse = 1 + Math.sin(this.spin * 2) * .08;
+        ctx.save(); ctx.translate(this.x, this.y); ctx.rotate(this.spin);
+        ctx.strokeStyle = `rgba(217,2,238,${Math.min(1, this.life) * .8})`; ctx.lineWidth = 8;
+        for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(0, 0, (this.radius + i * 13) * pulse, i * 1.9, i * 1.9 + 3.9); ctx.stroke(); }
+        ctx.fillStyle = '#03030a'; ctx.beginPath(); ctx.arc(0, 0, this.radius * .62, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+      }
+    }
+
+    class Pickup {
+      constructor(x,y,kind='energy'){this.x=x;this.y=y;this.kind=kind;this.radius=kind==='relic'?19:15;this.pulse=0;this.life=kind==='relic'?12:25;}
+      update(dt){this.pulse+=dt*4;this.life-=dt;const dx=odDelta(this.x,player.x,W),dy=odDelta(this.y,player.y,H),d=Math.hypot(dx,dy);if(d<(odMagnet>0?230:48)){const step=Math.min(d,350*dt);this.x=(this.x+dx/Math.max(d,1)*step+W)%W;this.y=(this.y+dy/Math.max(d,1)*step+H)%H;}}
+      draw(){const spec=odSpecs[this.kind];ctx.save();ctx.translate(this.x,this.y);ctx.scale(1+Math.sin(this.pulse)*.12,1+Math.sin(this.pulse)*.12);ctx.fillStyle=spec.color;ctx.shadowColor=spec.color;ctx.shadowBlur=18;ctx.beginPath();ctx.arc(0,0,this.radius,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.fillStyle='#061021';ctx.font='bold 20px sans-serif';ctx.textAlign='center';ctx.fillText(odStyle==='gold'&&this.kind==='gem'?'★':spec.icon,0,7);ctx.fillStyle='white';ctx.font='bold 11px sans-serif';ctx.fillText(this.kind==='relic'?'500 · '+Math.ceil(this.life)+'s':['shield','slow','magnet'].includes(this.kind)?this.kind.toUpperCase():spec.value,0,-24);ctx.restore();}
+    }
+
+    // Ion Drift Skid Mark Segment (lateral tire/thruster burn streaks)
+    class SkidSegment {
+      constructor(x1, y1, x2, y2, color = '#00f0ff', width = 2.5, life = 1.4) {
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.color = color;
+        this.width = width;
+        this.maxLife = life;
+        this.life = life;
+      }
+      update(dt) {
+        this.life -= dt;
+      }
+      draw() {
+        if (this.life <= 0) return;
+        const alpha = Math.max(0, this.life / this.maxLife);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(this.x1, this.y1);
+        ctx.lineTo(this.x2, this.y2);
+        ctx.strokeStyle = this.color;
+        ctx.globalAlpha = alpha * 0.45;
+        ctx.lineWidth = this.width;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // Concussive Shockwave Ring (expanding wave on impacts)
+    class ShockwaveRing {
+      constructor(x, y, color = '#00f0ff', maxRadius = 90, duration = 0.45, lineWidth = 4) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
+        this.radius = 6;
+        this.maxRadius = maxRadius;
+        this.duration = duration;
+        this.life = duration;
+        this.maxLineWidth = lineWidth;
+      }
+      update(dt) {
+        this.life -= dt;
+        const progress = Math.min(1, Math.max(0, 1 - this.life / this.duration));
+        // Ease out cubic
+        const ease = 1 - Math.pow(1 - progress, 3);
+        this.radius = 6 + (this.maxRadius - 6) * ease;
+      }
+      draw() {
+        if (this.life <= 0) return;
+        const alpha = Math.max(0, this.life / this.duration);
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = this.color;
+        ctx.globalAlpha = alpha * 0.75;
+        ctx.lineWidth = Math.max(0.8, this.maxLineWidth * alpha);
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 8 * alpha;
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    // Particle FX
+    class Particle {
+      constructor(x, y, vx, vy, color, size, life) {
+        this.x = x;
+        this.y = y;
+        this.vx = vx;
+        this.vy = vy;
+        this.color = color;
+        this.size = size;
+        this.life = life;
+        this.maxLife = life;
+      }
+      update(dt) {
+        this.x += this.vx * dt;
+        this.y += this.vy * dt;
+        this.life -= dt;
+      }
+      draw() {
+        if (this.life <= 0) return;
+        const a = Math.max(0, this.life / this.maxLife);
+        ctx.save();
+        ctx.globalAlpha = a;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Floating Combat Text
+    class FloatingText {
+      constructor(x, y, text, color) {
+        this.x = x;
+        this.y = y;
+        this.text = text;
+        this.color = color;
+        this.life = 1.0;
+      }
+      update(dt) {
+        this.y -= 35 * dt;
+        this.life -= dt;
+      }
+      draw() {
+        if (this.life <= 0) return;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.life);
+        ctx.font = 'bold 16px sans-serif';
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 8;
+        ctx.textAlign = 'center';
+        ctx.fillText(this.text, this.x, this.y);
+        ctx.restore();
+      }
+    }
+
+    // Spawn drone around perimeter entering inward
+    function spawnDrone() {
+      let sx, sy;
+      if (Math.random() < 0.5) {
+        sx = Math.random() < 0.5 ? 55 : W - 55;
+        sy = Math.random() * (H - 160) + 80;
+      } else {
+        sx = Math.random() * (W - 160) + 80;
+        sy = Math.random() < 0.5 ? 55 : H - 55;
+      }
+      if (Math.hypot(sx - player.x, sy - player.y) < 180) {
+        sx = W - sx; sy = H - sy;
+      }
+      const heavy = runTime >= 40 && Math.random() < 0.22;
+      const drone = heavy ? new HeavyRammer(sx, sy) : new Drone(sx, sy);
+      drone.angle = Math.atan2(H / 2 - sy, W / 2 - sx); // Face inward into arena
+      if (!heavy && runTime >= 30 && Math.random() < 0.4) {
+        drone.type = runTime >= 55 && Math.random() < 0.5 ? 'charger' : 'patrol';
+        drone.patrolAngle = Math.random() * Math.PI * 2;
+      }
+      drones.push(drone);
+    }
+    function drawDroneCue(drone){
+      ctx.save();ctx.translate(drone.x,drone.y);ctx.textAlign='center';ctx.font='bold 12px sans-serif';ctx.fillStyle=drone.type==='charger'?'#ff90df':drone.type==='patrol'?'#80ffc0':'#ffb766';ctx.fillText(drone.type.toUpperCase(),0,-35);
+      if(drone.warning>0){ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=3;ctx.setLineDash([6,5]);ctx.beginPath();ctx.arc(0,0,26,0,Math.PI*2);ctx.stroke();ctx.fillText('!',0,5);ctx.restore();return true;}
+      if(drone.type==='charger'&&drone.phase%4<1.2){ctx.rotate(drone.angle);ctx.strokeStyle='#ff90df';ctx.setLineDash([10,8]);ctx.beginPath();ctx.moveTo(25,0);ctx.lineTo(190,0);ctx.stroke();}ctx.restore();return false;
+    }
+
+    function spawnGravityWell() {
+      let x = W * (.25 + Math.random() * .5);
+      let y = H * (.25 + Math.random() * .5);
+      if (Math.hypot(x - player.x, y - player.y) < 180) { x = W - x; y = H - y; }
+      gravWells.push(new GravityWell(x, y));
+      floatingTexts.push(new FloatingText(x, y - 70, 'GRAVITY WELL FORMED', '#d902ee'));
+    }
+
+    function awardCombo(baseScore, label, x, y, color, category = label.includes('NEAR MISS') ? 'dodges' : 'crashes') {
+      comboCount = comboTimer > 0 ? Math.min(8, comboCount + 1) : 1;
+      comboTimer = 3;
+      const multiplier = 1 + Math.floor((comboCount - 1) / 2) * 0.5;
+      const earned = Math.round(baseScore * multiplier);
+      score += earned; odTotals[category] += earned;
+      const comboLabel = multiplier > 1 ? `  ×${multiplier.toFixed(1)} COMBO` : '';
+      floatingTexts.push(new FloatingText(x, y, `${label} +${earned}${comboLabel}`, color));
+    }
+
+    // Border deflection sparks when non-wrapping drones hit perimeter
+    function createBorderSparks(x, y) {
+      shockwaves.push(new ShockwaveRing(x, y, '#ff3344', 45, 0.28, 2));
+      for (let i = 0; i < 6; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = 40 + Math.random() * 90;
+        particles.push(new Particle(
+          x, y,
+          Math.cos(ang) * spd,
+          Math.sin(ang) * spd,
+          '#ff3344',
+          2.5,
+          0.25
+        ));
+      }
+    }
+
+    // Explode shockwave
+    function createExplosion(x, y, color = '#ff3344', count = 28) {
+      sound.playExplosion();
+      triggerHaptic([40, 30, 80]);
+      screenShake = 0.35;
+      shockwaves.push(new ShockwaveRing(x, y, color, count > 32 ? 120 : 80, 0.45, count > 32 ? 5 : 3.5));
+      for (let i = 0; i < count; i++) {
+        const ang = Math.random() * Math.PI * 2;
+        const spd = 60 + Math.random() * 260;
+        particles.push(new Particle(
+          x, y,
+          Math.cos(ang) * spd,
+          Math.sin(ang) * spd,
+          Math.random() < 0.5 ? color : '#ffe600',
+          Math.random() * 4 + 2,
+          0.6 + Math.random() * 0.4
+        ));
+      }
+    }
+
+    // Reset Game
+    function initGame() {
+      player = new PlayerShip(W / 2, H / 2);
+      drones = [];
+      asteroids = [];
+      particles = [];
+      shockwaves = [];
+      skidMarks = [];
+      pickups = [];
+      floatingTexts = [];
+      score = 0;
+      sessionDronesDestroyed = 0;
+      sessionNearMisses = 0;
+      gameStartTime = performance.now();
+      waveTimer = 0;
+      spawnCounter = 0;
+      runTime = 0;
+      nextGravityWellAt = 20;
+      comboCount = 0;
+      comboTimer = 0;
+
+      // Safe Spawn Zone: Ensure NO asteroids spawn near player or in forward corridor
+      const numAsteroids = Math.min(odMode==='challenge'?10:8, Math.max(4, Math.floor(W * H / 120000))); 
+      for (let i = 0; i < numAsteroids; i++) {
+        let ax = 0, ay = 0, safe = false;
+        let attempts = 0;
+        while (!safe && attempts < 150) {
+          attempts++;
+          ax = Math.random() * W;
+          ay = Math.random() * H;
+
+          const dist = odDistance({x:ax,y:ay},player);
+          // 1. Omnidirectional safe bubble: at least 260px away from ship
+          if (dist < 260) continue;
+
+          // 2. Clear forward launch corridor: ship points UP (angle = -PI/2)
+          // Forbid any asteroid ahead of ship (ay < player.y) within 240px lateral cone up to 480px away
+          const inForwardCorridor = (ay < player.y) && (Math.abs(ax - player.x) < 240) && (dist < 480);
+          if (inForwardCorridor) continue;
+
+          safe = true;
+        }
+        if(safe && !asteroids.some(o=>odDistance({x:ax,y:ay},o)<o.radius+85)) asteroids.push(new Asteroid(ax, ay, 28 + Math.random() * 24));
+      }
+
+      // Warning at 0.8s, then 1.2s to activate.
+      spawnCounter = 0; odInit();
+      sound.startEngine();
+      floatingTexts.push(new FloatingText(player.x, player.y - 45, '🚀 ENGINES ONLINE — CORRIDOR CLEAR', '#00f0ff'));
+
+      gameState = 'PLAYING';
+      startScreen.classList.add('hidden');
+      gameOverScreen.classList.add('hidden');
+      pauseScreen.classList.add('hidden');
+      pauseBtn.classList.remove('hidden');
+    }
+
+    // Game Over Trigger
+    function triggerGameOver(cause='Collision') {
+      odFinish(cause);
+      sound.stopEngine();
+      gameState = 'GAMEOVER';
+      pauseBtn.classList.add('hidden');
+      pauseScreen.classList.add('hidden');
+      createExplosion(player.x, player.y, '#00f0ff', 45);
+      triggerHaptic([100, 50, 150]);
+
+
+
+      const elapsedSec = Math.floor(runTime);
+      finalScoreEl.textContent = score.toLocaleString();
+      highScoreEl.textContent = highScore.toLocaleString();
+      dronesDestroyedEl.textContent = sessionDronesDestroyed;
+      nearMissCountEl.textContent = sessionNearMisses;
+      survivalTimeEl.textContent = `${elapsedSec}s`;
+
+      setTimeout(() => {
+        if(gameState==='GAMEOVER')gameOverScreen.classList.remove('hidden');
+      }, 700);
+    }
+
+    // Pause & Resume Controllers
+    function pauseGame() {
+      if (gameState !== 'PLAYING') return;
+      gameState = 'PAUSED';
+      sound.stopEngine();
+      input.left = input.right = input.nitro = false;
+      pauseScoreEl.textContent = Math.floor(score).toLocaleString();
+      pauseTimeEl.textContent = `${Math.floor(runTime)}s`;
+      pauseThreatsEl.textContent = drones.length;
+      if (typeof odMission !== 'undefined') {
+        const missions = ['Collect artifacts', 'Destroy drones', 'Near-miss dodges'];
+        const targets = [10, 3, 3];
+        const progress = [odCollected, sessionDronesDestroyed, sessionNearMisses][odMission];
+        pauseMissionEl.textContent = odDone ? 'MISSION COMPLETE (+500)' : `${missions[odMission]} (${progress}/${targets[odMission]})`;
+      }
+      pauseScreen.classList.remove('hidden');
+    }
+
+    function resumeGame() {
+      if (gameState !== 'PAUSED') return;
+      gameState = 'PLAYING';
+      sound.startEngine();
+      pauseScreen.classList.add('hidden');
+      input.left = input.right = input.nitro = false;
+      lastTime = performance.now();
+      accumulator = 0; // Prevent delta spike on resume
+    }
+
+    pauseBtn.addEventListener('click', () => {
+      if (gameState === 'PLAYING') pauseGame();
+    });
+    resumeBtn.addEventListener('click', resumeGame);
+    pauseAbortBtn.addEventListener('click', () => {
+      pauseScreen.classList.add('hidden');
+      pauseBtn.classList.add('hidden');
+      sound.stopEngine();
+      odMenu();
+    });
+
+    // Auto-Pause & Tab Visibility Protection (Quality of Life)
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden && gameState === 'PLAYING') {
+        pauseGame();
+      }
+    });
+    window.addEventListener('blur', () => {
+      if (gameState === 'PLAYING') {
+        pauseGame();
+      }
+    });
+
+    // Start & Restart Button Listeners
+    startBtn.addEventListener('click', () => { odPractice=false; odGuided=!odSave.guided;
+      sound.init();
+      initGame();
+    });
+    restartBtn.addEventListener('click', () => {
+      sound.init();
+      initGame();
+    });
+
+    // Fixed 60Hz Physics Timestep (guarantees deterministic physics on 60/90/120Hz displays)
+    const FIXED_DT = 1 / 60;
+    let accumulator = 0;
+    let lastTime = performance.now();
+
+    function loop(now) {
+      let frameTime = (now - lastTime) / 1000;
+      lastTime = now;
+
+      // Cap maximum frame delta (e.g. background tab switch) to prevent spiral of death
+      if (frameTime > 0.1) frameTime = 0.1;
+
+      if (gameState === 'PLAYING') {
+        accumulator += frameTime;
+        while (accumulator >= FIXED_DT) {
+          updateGame(FIXED_DT);
+          accumulator -= FIXED_DT;
+          if (gameState !== 'PLAYING') break;
+        }
+      } else {
+        accumulator = 0;
+      }
+
+      renderGame();
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+
+    // Update Step
+    function updateGame(dt) {
+      runTime += dt;
+      comboTimer = Math.max(0, comboTimer - dt);
+      if (!comboTimer) comboCount = 0;
+      // Score increment for surviving
+      const survival = dt * 20; score += survival; odTotals.survival += survival;
+
+      // Drone wave spawning
+      spawnCounter += dt;
+      const spawnInterval = odFirstDrone ? Math.max(3.5,8-Math.max(0,runTime-25)/30) : .8;
+      if (spawnCounter >= spawnInterval && drones.length < Math.min(odMode==='relaxed'?5:odMode==='challenge'?10:8,1+Math.floor(runTime/22))) {
+        spawnCounter = 0;
+        spawnDrone(); odFirstDrone=true;
+      }
+
+      // Update Player
+      player.update(dt);
+
+      // Update Asteroids
+      asteroids.forEach(a => a.update(dt));
+
+      // Update Drones (clean up drones that smashed into boundary wall)
+      for (let i = drones.length - 1; i >= 0; i--) {
+        drones[i].update(dt);
+        if (drones[i].dead) {
+          drones.splice(i, 1);
+        }
+      }
+
+      // Periodic gravity wells bend all ship motion and can destroy pursuers.
+      if (runTime >= nextGravityWellAt) {
+        spawnGravityWell();
+        nextGravityWellAt += 20;
+      }
+      gravWells.forEach(well => {
+        well.update(dt);
+        well.apply(player, dt);
+        drones.forEach(drone => well.apply(drone, dt));
+        asteroids.forEach(asteroid => well.apply(asteroid, dt));
+      });
+      gravWells = gravWells.filter(well => well.life > 0);
+
+      odUpdate(dt);
+
+      // Update Particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update(dt);
+        if (particles[i].life <= 0) particles.splice(i, 1);
+      }
+
+      // Update Skid Marks
+      for (let i = skidMarks.length - 1; i >= 0; i--) {
+        skidMarks[i].update(dt);
+        if (skidMarks[i].life <= 0) skidMarks.splice(i, 1);
+      }
+
+      // Update Shockwaves
+      for (let i = shockwaves.length - 1; i >= 0; i--) {
+        shockwaves[i].update(dt);
+        if (shockwaves[i].life <= 0) shockwaves.splice(i, 1);
+      }
+
+      // Update Floating texts
+      for (let i = floatingTexts.length - 1; i >= 0; i--) {
+        floatingTexts[i].update(dt);
+        if (floatingTexts[i].life <= 0) floatingTexts.splice(i, 1);
+      }
+
+      // Screen shakes and flashes
+      if (screenShake > 0) screenShake = Math.max(0, screenShake - dt * 2);
+      if (nearMissFlash > 0) nearMissFlash = Math.max(0, nearMissFlash - dt * 2);
+
+      // Event horizons crush drones, but are dangerous to the player without Overdrive.
+      for (const well of gravWells) {
+        if (Math.hypot(player.x - well.x, player.y - well.y) < well.radius * .62) {
+          if (odHit('Lost in a gravity well')) return;
+        }
+        for (let i = drones.length - 1; i >= 0; i--) {
+          const drone = drones[i]; if(drone.warning>0)continue;
+          if (Math.hypot(drone.x - well.x, drone.y - well.y) < well.radius * .72) {
+            createExplosion(drone.x, drone.y, '#d902ee');
+            awardCombo(350, 'SINGULARITY CRUSH!', drone.x, drone.y, '#d902ee');
+            sessionDronesDestroyed++;
+            pickups.push(new Pickup(drone.x, drone.y));
+            drones.splice(i, 1);
+          }
+        }
+      }
+
+      // Collision: Player vs Drones (Drones do NOT wrap, so collisions only occur in-bounds)
+      for (let i = drones.length - 1; i >= 0; i--) {
+        const d = drones[i]; if(d.warning>0)continue;
+        if (Math.hypot(player.x - d.x, player.y - d.y) < player.radius + d.radius) {
+          if (player.isOverdrive) {
+            // Overdrive destroys enemy!
+            createExplosion(d.x, d.y, '#d902ee');
+            score += 500; odTotals.crashes += 500;
+            sessionDronesDestroyed++;
+            floatingTexts.push(new FloatingText(d.x, d.y, '+500 RAMMED!', '#d902ee'));
+            drones.splice(i, 1);
+          } else if (player.launchShield > 0) {
+            // Launch shield disperses enemy during grace period
+            createExplosion(d.x, d.y, '#00f0ff', 20);
+            floatingTexts.push(new FloatingText(player.x, player.y - 25, '🛡️ SHIELD DEFLECT!', '#00f0ff'));
+            sound.playPickup();
+            drones.splice(i, 1);
+          } else {
+            if(odHit('Caught by a '+d.type+' drone')) return;
+          }
+        }
+      }
+
+      // Collision: Player vs Asteroids (with toroidal boundary support)
+      for (let a of asteroids) {
+        let cax = Math.abs(player.x - a.x);
+        let cay = Math.abs(player.y - a.y);
+        if (cax > W / 2) cax = W - cax;
+        if (cay > H / 2) cay = H - cay;
+        if (Math.hypot(cax, cay) < player.radius + a.radius * 0.8) {
+          if (player.isOverdrive) {
+            createExplosion(a.x, a.y, '#00f0ff');
+            a.x = -999; // move offscreen
+          } else if (player.launchShield > 0) {
+            // Deflect player smoothly during launch grace period
+            const ang = Math.atan2(player.y - a.y, player.x - a.x);
+            player.vx = Math.cos(ang) * 200;
+            player.vy = Math.sin(ang) * 200;
+            sound.playPickup();
+            floatingTexts.push(new FloatingText(player.x, player.y - 25, '🛡️ SHIELD DEFLECT!', '#00f0ff'));
+          } else {
+            if(odHit('Crashed into an asteroid')) return;
+          }
+        }
+      }
+
+      // Collision: Drone vs Drone. Heavy rammers deflect interceptors instead of vanishing.
+      const destroyedDrones = new Set();
+      for (let i = 0; i < drones.length; i++) for (let j = i + 1; j < drones.length; j++) {
+        const d1 = drones[i], d2 = drones[j];
+        if (d1.warning>0 || d2.warning>0 || destroyedDrones.has(d1) || destroyedDrones.has(d2) || Math.hypot(d1.x - d2.x, d1.y - d2.y) >= d1.radius + d2.radius) continue;
+        const midX = (d1.x + d2.x) / 2, midY = (d1.y + d2.y) / 2;
+        if (d1.type === 'rammer' || d2.type === 'rammer') {
+          const heavy = d1.type === 'rammer' ? d1 : d2; const light = heavy === d1 ? d2 : d1;
+          destroyedDrones.add(light); heavy.angle += Math.PI * .35; heavy.vx *= .55; heavy.vy *= .55;
+          createExplosion(midX, midY, '#ffb703', 24); awardCombo(250, 'RAMMER DEFLECTION!', midX, midY, '#ffb703'); sessionDronesDestroyed++; pickups.push(new Pickup(midX, midY));
+        } else {
+          destroyedDrones.add(d1); destroyedDrones.add(d2); createExplosion(midX, midY, '#ffb703', 35); awardCombo(400, 'DRONE CRASH!', midX, midY, '#ff3344'); sessionDronesDestroyed += 2; pickups.push(new Pickup(midX, midY));
+        }
+      }
+      if (destroyedDrones.size) drones = drones.filter(drone => !destroyedDrones.has(drone));
+
+      // Collision: Drone vs Asteroids
+      for (let i = drones.length - 1; i >= 0; i--) {
+        const d = drones[i]; if(d.warning>0)continue;
+        for (let a of asteroids) {
+          if (Math.hypot(d.x - a.x, d.y - a.y) < d.radius + a.radius * 0.85) {
+            createExplosion(d.x, d.y, '#ffb703');
+            awardCombo(300, 'ASTEROID SMASH!', d.x, d.y, '#ffb703');
+            sessionDronesDestroyed++;
+            pickups.push(new Pickup(d.x, d.y));
+            drones.splice(i, 1);
+            break;
+          }
+        }
+      }
+    }
+
+    // Render Step
+    function renderGame() {
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      // Screen shake effect
+      if (screenShake > 0) {
+        const mag = screenShake * 16;
+        ctx.translate((Math.random() - 0.5) * mag, (Math.random() - 0.5) * mag);
+      }
+
+      // Clear & Draw Background
+      ctx.fillStyle = '#060814';
+      ctx.fillRect(0, 0, W, H);
+
+      // Draw background pattern if loaded
+      if (assets.bg.complete && assets.bg.naturalWidth > 0) {
+        const pattern = ctx.createPattern(assets.bg, 'repeat');
+        ctx.fillStyle = pattern;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      if(odTheme!=='nebula'){ctx.fillStyle=odTheme==='aurora'?'#00cc9930':'#ee551133';ctx.fillRect(0,0,W,H);}
+
+      // Render Ion Drift Skid Marks (backdrop burn layer)
+      skidMarks.forEach(sm => sm.draw());
+
+      // Render Asteroids
+      asteroids.forEach(a => a.draw());
+
+      // Render active gravity wells beneath ships and pickups.
+      gravWells.forEach(well => well.draw());
+
+      // Render Shockwaves (expanding concussive rings)
+      shockwaves.forEach(sw => sw.draw());
+
+      // Render Pickups
+      pickups.forEach(p => p.draw());
+
+      // Render Drones
+      drones.forEach(d => d.draw());
+
+      // Render Player
+      if (player && gameState !== 'GAMEOVER') {
+        player.draw();
+      }
+
+      // Render Particles
+      particles.forEach(p => p.draw());
+
+      // Render Floating Texts
+      floatingTexts.forEach(ft => ft.draw());
+
+      // Near-Miss flash vignette
+      if (nearMissFlash > 0) {
+        ctx.fillStyle = `rgba(0, 240, 255, ${nearMissFlash * 0.4})`;
+        ctx.fillRect(0, 0, W, H);
+      }
+
+      // Cyber Containment Perimeter Barrier & Phase Shift Warp Gate
+      if (gameState === 'PLAYING') {
+        ctx.save();
+        // Base perimeter containment field
+        ctx.strokeStyle = 'rgba(0, 240, 255, 0.2)';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([12, 12]);
+        ctx.strokeRect(2, 2, W - 4, H - 4);
+        ctx.setLineDash([]);
+
+        // Tech corner brackets
+        const cLen = 22;
+        ctx.strokeStyle = '#00f0ff';
+        ctx.lineWidth = 3;
+        // Top-left
+        ctx.beginPath(); ctx.moveTo(2, 2 + cLen); ctx.lineTo(2, 2); ctx.lineTo(2 + cLen, 2); ctx.stroke();
+        // Top-right
+        ctx.beginPath(); ctx.moveTo(W - 2 - cLen, 2); ctx.lineTo(W - 2, 2); ctx.lineTo(W - 2, 2 + cLen); ctx.stroke();
+        // Bottom-left
+        ctx.beginPath(); ctx.moveTo(2, H - 2 - cLen); ctx.lineTo(2, H - 2); ctx.lineTo(2 + cLen, H - 2); ctx.stroke();
+        // Bottom-right
+        ctx.beginPath(); ctx.moveTo(W - 2 - cLen, H - 2); ctx.lineTo(W - 2, H - 2); ctx.lineTo(W - 2, H - 2 - cLen); ctx.stroke();
+
+        // Drone containment warning aura: flashes when drones get close to the barrier
+        const droneNearEdge = drones.some(d => d.x < 70 || d.x > W - 70 || d.y < 70 || d.y > H - 70);
+        if (droneNearEdge) {
+          ctx.strokeStyle = 'rgba(255, 51, 68, 0.45)';
+          ctx.lineWidth = 2;
+          ctx.setLineDash([6, 6]);
+          ctx.strokeRect(3, 3, W - 6, H - 6);
+          ctx.setLineDash([]);
+        }
+
+        // Player Quantum Warp Horizon Shimmer (active phase gate on source and target edges)
+        if (player) {
+          const m = 85;
+          if (player.x < m || player.x > W - m) {
+            const a = player.x < m ? (1 - player.x / m) : (1 - (W - player.x) / m);
+            ctx.strokeStyle = `rgba(0, 240, 255, ${0.4 + a * 0.55})`;
+            ctx.shadowColor = '#00f0ff';
+            ctx.shadowBlur = 14 * a;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(1, 0); ctx.lineTo(1, H);
+            ctx.moveTo(W - 1, 0); ctx.lineTo(W - 1, H);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+          }
+          if (player.y < m || player.y > H - m) {
+            const a = player.y < m ? (1 - player.y / m) : (1 - (H - player.y) / m);
+            ctx.strokeStyle = `rgba(0, 240, 255, ${0.4 + a * 0.55})`;
+            ctx.shadowColor = '#00f0ff';
+            ctx.shadowBlur = 14 * a;
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, 1); ctx.lineTo(W, 1);
+            ctx.moveTo(0, H - 1); ctx.lineTo(W, H - 1);
+            ctx.stroke();
+            ctx.shadowBlur = 0;
+          }
+        }
+        ctx.restore();
+      }
+
+      // HUD overlay (during gameplay)
+      if (gameState === 'PLAYING') {
+        renderHUD();
+      }
+
+      ctx.restore();
+    }
+
+    // In-game HUD
+    function renderHUD() {
+      ctx.save();
+      // Score Top-Left
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`SCORE: ${Math.floor(score)}`, 24, 40);
+
+      ctx.font = '14px sans-serif';
+      ctx.fillStyle = '#94a3b8';
+      ctx.fillText(`BEST: ${highScore}`, 24, 62);
+
+      // Mission Objective Top-Left (Option 1)
+      if (typeof odMission !== 'undefined') {
+        const missions = ['Collect artifacts', 'Destroy drones', 'Near-miss dodges'];
+        const targets = [10, 3, 3];
+        const progress = [odCollected, sessionDronesDestroyed, sessionNearMisses][odMission];
+        const target = targets[odMission];
+        const label = odDone ? '🎯 MISSION COMPLETE +500' : `🎯 ${missions[odMission]}: ${progress}/${target}`;
+        ctx.font = 'bold 12px sans-serif';
+        ctx.fillStyle = odDone ? '#80ffc0' : '#47a8bd';
+        ctx.fillText(label, 24, 82);
+      }
+
+      // Guided tutorial tip (only in training mode)
+      if (typeof odGuided !== 'undefined' && odGuided) {
+        const guide = odSteered < 0.6 ? 'Hold A/D or left/right to steer' :
+                      odCollected < 3 ? 'Collect 3 glowing artifacts' :
+                      'Bait a drone into an asteroid, then steer away';
+        ctx.font = 'bold 13px sans-serif';
+        ctx.fillStyle = '#00f0ff';
+        ctx.textAlign = 'center';
+        ctx.fillText(`💡 ${guide}`, W / 2, H - 110);
+        ctx.textAlign = 'left';
+      }
+
+      // Overdrive & Nitro bars Top-Right
+      const barW = W<600 ? 90 : 140;
+      const barH = 12;
+      const rx = W - barW - 24;
+
+      // Nitro Bar
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      ctx.fillRect(rx, 24, barW, barH);
+      ctx.fillStyle = '#ffb703';
+      ctx.fillRect(rx, 24, (player.nitroFuel / 100) * barW, barH);
+      ctx.font = 'bold 10px sans-serif';
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'right';
+      ctx.fillText('NITRO FUEL', W<600 ? W-24 : rx-10, W<600 ? 19 : 34);
+
+      // Overdrive Bar
+      ctx.fillStyle = 'rgba(255,255,255,0.1)';
+      ctx.fillRect(rx, 44, barW, barH);
+      ctx.fillStyle = player.isOverdrive ? '#d902ee' : '#00f0ff';
+      const fillPct = player.isOverdrive ? (player.overdriveTimer / 5.0) : (player.overdriveEnergy / 100);
+      ctx.fillRect(rx, 44, fillPct * barW, barH);
+      ctx.fillText(player.isOverdrive ? 'OVERDRIVE' : 'QUANTUM', W<600 ? W-24 : rx-10, W<600 ? 70 : 54);
+
+      // Active drone threat counter or launch shield status
+      if (player.launchShield > 0) {
+        ctx.fillStyle = '#00f0ff';
+        ctx.font = 'bold 15px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`SHIELD: ${player.launchShield.toFixed(1)}s`, W / 2, W<600 ? 85 : 36);
+      } else {
+        ctx.fillStyle = '#ff3344';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(`⚠️ PURSUING DRONES: ${drones.length}`, W / 2, 36);
+      }
+
+      if (comboTimer > 0 && comboCount > 1) {
+        const comboMultiplier = 1 + Math.floor((comboCount - 1) / 2) * 0.5;
+        ctx.fillStyle = '#ffe600';
+        ctx.font = 'bold 15px sans-serif';
+        ctx.fillText(`COMBO ×${comboMultiplier.toFixed(1)}  ${comboTimer.toFixed(1)}s`, W / 2, W<600 ? 103 : 58);
+      }
+
+      ctx.restore();
+    }
+  </script>
+</body>
+</html>

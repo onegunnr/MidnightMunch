@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-28 -28 56 56" width="56" height="56">
+  <defs>
+    <radialGradient id="donutDough" cx="35%" cy="30%" r="65%">
+      <stop offset="0%" stop-color="#fff0bd" />
+      <stop offset="45%" stop-color="#f6ca68" />
+      <stop offset="85%" stop-color="#cb8926" />
+      <stop offset="100%" stop-color="#935b11" />
+    </radialGradient>
+    <linearGradient id="pinkIcing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9bc2" />
+      <stop offset="60%" stop-color="#ff599c" />
+      <stop offset="100%" stop-color="#d62b70" />
+    </linearGradient>
+    <filter id="donutGlow" x="-35%" y="-35%" width="170%" height="170%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4.5" flood-color="#ffb834" flood-opacity="0.65" />
+    </filter>
+  </defs>
+
+  <!-- Sparkles around donut -->
+  <path d="M -18,-18 L -16,-14 L -18,-10 L -20,-14 Z" fill="#ffef94" />
+  <path d="M 18,-16 L 20,-12 L 18,-8 L 16,-12 Z" fill="#ffef94" />
+  <path d="M -16,18 L -14,21 L -16,24 L -18,21 Z" fill="#ffef94" />
+  <path d="M 19,15 L 21,18 L 19,21 L 17,18 Z" fill="#ffef94" />
+
+  <g filter="url(#donutGlow)">
+    <!-- Golden Dough Base -->
+    <circle cx="0" cy="0" r="20" fill="url(#donutDough)" stroke="#a16616" stroke-width="1.5" />
+    <!-- Center Dough Hole -->
+    <circle cx="0" cy="0" r="7.5" fill="#171448" stroke="#a16616" stroke-width="1.2" />
+
+    <!-- Glossy Pink Strawberry Glaze / Icing -->
+    <path d="M -16,-6 C -19,4 -10,18 2,18 C 14,18 19,10 17,-3 C 15,-16 2,-19 -8,-17 C -15,-15 -14,-10 -16,-6 Z" fill="url(#pinkIcing)" />
+    <!-- Icing drips -->
+    <circle cx="-13" cy="8" r="3.2" fill="#ff599c" />
+    <circle cx="12" cy="9" r="3.5" fill="#ff599c" />
+    <circle cx="3" cy="17" r="3" fill="#ff599c" />
+    <circle cx="-6" cy="-14" r="2.8" fill="#ff599c" />
+
+    <!-- Center Icing Cutout -->
+    <circle cx="0" cy="0" r="7.5" fill="#171448" />
+
+    <!-- Icing Sheen Highlight -->
+    <path d="M -12,-12 C -4,-18 7,-16 12,-10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.8" />
+
+    <!-- Sprinkles (Yellow, Turquoise, White, Purple) -->
+    <!-- Yellow Sprinkles -->
+    <line x1="-12" y1="-5" x2="-8" y2="-7" stroke="#ffeb3b" stroke-width="2" stroke-linecap="round" />
+    <line x1="8" y1="10" x2="12" y2="7" stroke="#ffeb3b" stroke-width="2" stroke-linecap="round" />
+    <line x1="-3" y1="13" x2="1" y2="14" stroke="#ffeb3b" stroke-width="2" stroke-linecap="round" />
+    <!-- Turquoise Sprinkles -->
+    <line x1="6" y1="-12" x2="10" y2="-9" stroke="#38efdf" stroke-width="2" stroke-linecap="round" />
+    <line x1="-13" y1="3" x2="-9" y2="5" stroke="#38efdf" stroke-width="2" stroke-linecap="round" />
+    <line x1="12" y1="-2" x2="14" y2="2" stroke="#38efdf" stroke-width="2" stroke-linecap="round" />
+    <!-- White Sprinkles -->
+    <line x1="-6" y1="-9" x2="-2" y2="-11" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+    <line x1="5" y1="14" x2="7" y2="10" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" />
+    <!-- Purple Sprinkles -->
+    <line x1="-8" y1="10" x2="-5" y2="8" stroke="#9d4edd" stroke-width="2" stroke-linecap="round" />
+    <line x1="11" y1="-7" x2="13" y2="-11" stroke="#9d4edd" stroke-width="2" stroke-linecap="round" />
+  </g>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-58 -58 116 116" width="116" height="116">
+  <defs>
+    <radialGradient id="leafs"><stop stop-color="#9af06f"/><stop offset="1" stop-color="#277051"/></radialGradient>
+    <filter id="planterShadow" x="-25%" y="-25%" width="150%" height="150%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#09081c" flood-opacity=".7"/></filter>
+  </defs>
+  <g filter="url(#planterShadow)">
+    <ellipse cy="34" rx="46" ry="14" fill="#111024" opacity=".58"/>
+    <path d="M-44,2 Q-40,-31 0,-39 Q40,-31 44,2 L35,34 Q0,46 -35,34 Z" fill="#db6c58" stroke="#772d48" stroke-width="3"/>
+    <path d="M-41,3 Q0,16 41,3" fill="none" stroke="#ffe0a3" stroke-width="4" opacity=".8"/>
+    <g fill="url(#leafs)" stroke="#174638" stroke-width="2">
+      <ellipse cx="-22" cy="-13" rx="17" ry="28" transform="rotate(-30 -22 -13)"/><ellipse cx="0" cy="-25" rx="18" ry="31"/><ellipse cx="22" cy="-13" rx="17" ry="28" transform="rotate(30 22 -13)"/>
+      <ellipse cx="-8" cy="-5" rx="16" ry="26" transform="rotate(-12 -8 -5)"/><ellipse cx="12" cy="-6" rx="16" ry="26" transform="rotate(16 12 -6)"/>
+    </g>
+    <circle cx="0" cy="-18" r="5" fill="#ffcf57"/><circle cx="-18" cy="-2" r="4" fill="#ff7ca8"/><circle cx="19" cy="-2" r="4" fill="#66f4cb"/>
+  </g>
+</svg>

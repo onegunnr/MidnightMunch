@@ -1,0 +1,14 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const html=fs.readFileSync('tracker/Orbit Drift/index.html','utf8');const core=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];const expansion=fs.readFileSync('tracker/Orbit Drift/enhancements.js','utf8');
+function boot(width=1280,height=720){const els=new Map(),store=new Map();let seed=7;const math=Object.create(Math);math.random=()=>((seed=seed*16807%2147483647)-1)/2147483646;
+ const context=vm.createContext({console,Math:math,performance:{now:()=>0},requestAnimationFrame(){},setTimeout(){},Image:class{},navigator:{},window:{innerWidth:width,innerHeight:height,devicePixelRatio:1,addEventListener(){}},localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},document:{getElementById(id){if(!els.has(id))els.set(id,{style:{},options:[{},{},{}],classList:{add(){},remove(){},toggle(){}},addEventListener(){},getContext:()=>new Proxy({},{get:()=>()=>{}})});return els.get(id);}}});vm.runInContext(expansion+'\n'+core,context);return code=>vm.runInContext(code,context);}
+for(const [w,h]of [[1280,720],[390,667],[667,390]]){const run=boot(w,h);run('initGame();');assert.equal(run('pickups.length'),3);run('for(let i=0;i<49;i++) updateGame(1/60)');assert.equal(run('drones.length'),1);assert(run('drones[0].warning>0'));run('for(let i=0;i<74;i++)updateGame(1/60)');assert(run('drones[0].warning===0'));assert(run('drones[0].speed<=205'));assert(run('odCollected>=1'));
+ assert(run('Array.from({length:500},()=>{player.x=Math.random()*W;player.y=Math.random()*H;spawnDrone();return odDistance(drones.pop(),player)>=odSpawnDistance();}).every(Boolean)'));
+ run("initGame();player.launchShield=0;odShield=true;");assert.equal(run("odHit('test')"),false);assert(run('player.launchShield===2.5&&!odShield'));assert.equal(run("odHit('test')"),false);
+ run("pickups=['shield','slow','magnet','relic'].map(k=>new Pickup(player.x,player.y,k));odUpdate(.01)");assert(run('odShield&&odSlow===6&&odMagnet===8&&odSave.achievements.includes("RELIC HUNTER")'));assert.equal(run('pickups.length'),0);
+ run("pickups=[new Pickup(0,0,'relic')];pickups[0].life=.01;odUpdate(.02)");assert.equal(run('pickups.length'),0);
+ run('odMission=0;odCollected=10;odUpdate(0);');assert.equal(run('odTotals.missions'),500);run('odUpdate(0)');assert.equal(run('odTotals.missions'),500);
+ run("odMode='challenge';score=12345;odFinish('test')");assert.equal(run('odSave.records.challenge'),12345);assert.equal(run('odSave.records.relaxed'),0);
+ run("odPractice=true;odMode='relaxed';score=99999;odFinish('test')");assert.equal(run('odSave.records.relaxed'),0);
+ run("gravWells.push({});initGame();");assert.equal(run('gravWells.length'),0);run('renderGame()');
+ console.log('PASS',w,h,'timing, safe spawns, pickups, shield, powers, missions, records, training, reset, rendering');}

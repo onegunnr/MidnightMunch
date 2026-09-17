@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-54 -42 108 84" width="108" height="84">
+  <defs>
+    <linearGradient id="heavyBody" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#465878"/><stop offset=".55" stop-color="#202b4a"/><stop offset="1" stop-color="#141b35"/></linearGradient>
+    <filter id="heavyShadow" x="-25%" y="-30%" width="150%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#070916" flood-opacity=".72"/></filter>
+  </defs>
+  <g filter="url(#heavyShadow)">
+    <ellipse cy="30" rx="45" ry="12" fill="#0c0e1a" opacity=".6"/>
+    <rect x="-36" y="-31" width="64" height="62" rx="15" fill="url(#heavyBody)" stroke="#0d1227" stroke-width="3"/>
+    <path d="M-35,-20 L27,-20 L27,-10 L-35,-10 Z M-35,10 L27,10 L27,20 L-35,20 Z" fill="#f0a52e"/>
+    <path d="M-31,-20 L-21,-20 L-11,-10 L-21,-10 Z M-8,-20 L2,-20 L12,-10 L2,-10 Z M15,-20 L25,-20 L27,-18 L27,-10 L25,-10 Z" fill="#20243a"/>
+    <path d="M-31,10 L-21,10 L-11,20 L-21,20 Z M-8,10 L2,10 L12,20 L2,20 Z M15,10 L25,10 L27,12 L27,20 L25,20 Z" fill="#20243a"/>
+    <rect x="-47" y="-28" width="13" height="18" rx="4" fill="#121726" stroke="#6b789a" stroke-width="2"/><rect x="-47" y="10" width="13" height="18" rx="4" fill="#121726" stroke="#6b789a" stroke-width="2"/>
+    <rect x="22" y="-28" width="13" height="18" rx="4" fill="#121726" stroke="#6b789a" stroke-width="2"/><rect x="22" y="10" width="13" height="18" rx="4" fill="#121726" stroke="#6b789a" stroke-width="2"/>
+    <circle cx="-3" cy="0" r="16" fill="#29345c" stroke="#a6b7e4" stroke-width="2"/><path d="M-11,-1 Q-3,-10 5,-1 Q-3,8 -11,-1" fill="#7deeff"/><path d="M1,-1 Q9,-10 17,-1 Q9,8 1,-1" fill="#7deeff"/>
+    <circle cx="-3" cy="-25" r="7" fill="#ffcf57" stroke="#fff5bd" stroke-width="2"/><circle cx="-3" cy="-25" r="3" fill="#fff"/>
+    <path d="M30,-11 L47,0 L30,11 Z" fill="#e85067" stroke="#8f2349" stroke-width="2"/>
+  </g>
+</svg>

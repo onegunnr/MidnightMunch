@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -35 80 70" width="80" height="70">
+  <defs>
+    <linearGradient id="botChassis" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#101830" />
+      <stop offset="60%" stop-color="#1e2d58" />
+      <stop offset="100%" stop-color="#131b36" />
+    </linearGradient>
+    <linearGradient id="botBumper" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ab1a34" />
+      <stop offset="60%" stop-color="#ef4765" />
+      <stop offset="100%" stop-color="#ab1a34" />
+    </linearGradient>
+    <radialGradient id="beaconGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#ffdc55" />
+      <stop offset="75%" stop-color="#ff694b" />
+      <stop offset="100%" stop-color="#c91832" />
+    </radialGradient>
+    <filter id="botShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#070914" flood-opacity="0.65" />
+    </filter>
+  </defs>
+
+  <g filter="url(#botShadow)">
+    <!-- Treads / Heavy Side Guards -->
+    <rect x="-26" y="-30" width="46" height="8" rx="3" fill="#0c101e" stroke="#253052" stroke-width="1.2" />
+    <rect x="-26" y="22" width="46" height="8" rx="3" fill="#0c101e" stroke="#253052" stroke-width="1.2" />
+    <!-- Tread Grips -->
+    <line x1="-16" y1="-30" x2="-16" y2="-22" stroke="#253052" stroke-width="1.5" />
+    <line x1="-4" y1="-30" x2="-4" y2="-22" stroke="#253052" stroke-width="1.5" />
+    <line x1="8" y1="-30" x2="8" y2="-22" stroke="#253052" stroke-width="1.5" />
+    <line x1="-16" y1="22" x2="-16" y2="30" stroke="#253052" stroke-width="1.5" />
+    <line x1="-4" y1="22" x2="-4" y2="30" stroke="#253052" stroke-width="1.5" />
+    <line x1="8" y1="22" x2="8" y2="30" stroke="#253052" stroke-width="1.5" />
+
+    <!-- Main Patrol Chassis -->
+    <rect x="-28" y="-23" width="56" height="46" rx="13" fill="url(#botChassis)" stroke="#394f8c" stroke-width="2" />
+
+    <!-- Front Reinforced Bumper (+X direction) -->
+    <path d="M 16,-22 C 34,-18 34,18 16,22 L 23,17 C 32,13 32,-13 23,-17 Z" fill="url(#botBumper)" />
+    <!-- Bumper Corner Rubber Guards -->
+    <rect x="23" y="-23" width="6" height="9" rx="2" fill="#0c101e" />
+    <rect x="23" y="14" width="6" height="9" rx="2" fill="#0c101e" />
+
+    <!-- Dual Scanner Headlights -->
+    <circle cx="25" cy="-9" r="4.5" fill="#78e9ff" stroke="#328ba6" stroke-width="1" />
+    <circle cx="26" cy="-9" r="2.2" fill="#ffffff" />
+    <circle cx="25" cy="9" r="4.5" fill="#78e9ff" stroke="#328ba6" stroke-width="1" />
+    <circle cx="26" cy="9" r="2.2" fill="#ffffff" />
+
+    <!-- Caution Stripe Center Decal -->
+    <path d="M -18,-14 L -11,-14 L -6,-7 L -13,-7 Z" fill="#ffcf47" />
+    <path d="M -18,7 L -11,7 L -6,14 L -13,14 Z" fill="#ffcf47" />
+    <path d="M -11,-14 L -4,-14 L 1,-7 L -6,-7 Z" fill="#1b233a" />
+    <path d="M -11,7 L -4,7 L 1,14 L -6,14 Z" fill="#1b233a" />
+
+    <!-- Security Sensor Housing / Plate -->
+    <rect x="-16" y="-12" width="30" height="24" rx="6" fill="#172242" stroke="#2b3b6e" stroke-width="1.5" />
+
+    <!-- Central Flashing Beacon / Siren Dome -->
+    <circle cx="-1" cy="0" r="10.5" fill="url(#beaconGlow)" stroke="#ffe58f" stroke-width="1.5" />
+    <circle cx="-1" cy="0" r="6" fill="#ffffff" opacity="0.85" />
+    <!-- Siren Guard Ring -->
+    <circle cx="-1" cy="0" r="12" fill="none" stroke="#2b3b6e" stroke-width="1.8" stroke-dasharray="6,4" />
+
+    <!-- Rear Exhaust / Antenna Ports -->
+    <circle cx="-25" cy="-14" r="2.5" fill="#0a0e1a" stroke="#2f3b5e" stroke-width="1" />
+    <circle cx="-25" cy="14" r="2.5" fill="#0a0e1a" stroke="#2f3b5e" stroke-width="1" />
+  </g>
+</svg>

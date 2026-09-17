@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 -24 48 48" width="48" height="48">
+  <defs>
+    <radialGradient id="butterGlow" cx="45%" cy="40%" r="55%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="35%" stop-color="#fff8d1" />
+      <stop offset="70%" stop-color="#fed668" />
+      <stop offset="100%" stop-color="#d9981e" />
+    </radialGradient>
+    <filter id="popGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#ffd55a" flood-opacity="0.5" />
+    </filter>
+  </defs>
+
+  <g filter="url(#popGlow)">
+    <!-- Back Puffs -->
+    <circle cx="-7" cy="-7" r="9" fill="#fcd160" stroke="#c48310" stroke-width="1.2" />
+    <circle cx="7" cy="-6" r="8.5" fill="#fcd160" stroke="#c48310" stroke-width="1.2" />
+    <circle cx="-8" cy="6" r="8" fill="#f5c247" stroke="#c48310" stroke-width="1.2" />
+    <circle cx="6" cy="6" r="9" fill="#f5c247" stroke="#c48310" stroke-width="1.2" />
+
+    <!-- Center Main Fluffy Kernel Puffs -->
+    <ellipse cx="0" cy="-2" rx="10" ry="9" fill="url(#butterGlow)" stroke="#c48310" stroke-width="1.2" />
+    <circle cx="-5" cy="1" r="7.5" fill="url(#butterGlow)" stroke="#c48310" stroke-width="1.2" />
+    <circle cx="5" cy="2" r="7" fill="url(#butterGlow)" stroke="#c48310" stroke-width="1.2" />
+
+    <!-- Butter Drizzle & Highlights -->
+    <path d="M -3,-7 C 2,-9 6,-4 3,-1 C 1,1 -1,-3 -3,-7 Z" fill="#ffd043" opacity="0.85" />
+    <circle cx="-2" cy="-4" r="2.5" fill="#ffffff" opacity="0.75" />
+    <circle cx="4" cy="-1" r="2" fill="#ffffff" opacity="0.75" />
+  </g>
+</svg>

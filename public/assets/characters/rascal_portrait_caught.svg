@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" width="280" height="280">
+  <defs>
+    <radialGradient id="caughtHalo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#4a1836" />
+      <stop offset="65%" stop-color="#2d122f" />
+      <stop offset="100%" stop-color="#140b24" />
+    </radialGradient>
+    <linearGradient id="cYellowHelmet" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff485" />
+      <stop offset="50%" stop-color="#ffbe1a" />
+      <stop offset="100%" stop-color="#cf7204" />
+    </linearGradient>
+    <linearGradient id="cJacket" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6741b8" />
+      <stop offset="100%" stop-color="#311961" />
+    </linearGradient>
+    <filter id="caughtDrop" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#080414" flood-opacity="0.75" />
+    </filter>
+  </defs>
+
+  <!-- Circular Portal Frame -->
+  <circle cx="140" cy="140" r="130" fill="url(#caughtHalo)" stroke="#ef4765" stroke-width="5" />
+  <circle cx="140" cy="140" r="122" fill="none" stroke="#ffd65a" stroke-width="2" opacity="0.5" />
+
+  <!-- Dizzy Stars & Popcorn Shards flying around in background -->
+  <g fill="#ffd84d">
+    <polygon points="40,55 43,62 50,64 44,68 46,75 40,70 34,75 36,68 30,64 37,62" />
+    <polygon points="235,60 238,66 244,68 239,72 241,78 235,74 229,78 231,72 226,68 232,66" />
+    <circle cx="52" cy="115" r="4.5" fill="#fff4cb" stroke="#cf961d" stroke-width="1" />
+    <circle cx="228" cy="120" r="5" fill="#ffe794" stroke="#cf961d" stroke-width="1" />
+    <circle cx="35" cy="170" r="6" fill="#ffe27d" stroke="#cf961d" stroke-width="1" />
+    <circle cx="242" cy="175" r="5.5" fill="#fff7d6" stroke="#cf961d" stroke-width="1" />
+  </g>
+
+  <!-- Dizzy Orbit Ring around Rascal's Head -->
+  <g stroke="#ffda59" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.85">
+    <ellipse cx="140" cy="52" rx="55" ry="14" transform="rotate(-8, 140, 52)" stroke-dasharray="14,10" />
+    <polygon points="105,43 110,48 116,46 112,51 115,56 109,53 105,57 105,51 100,48 106,47" fill="#ffd84d" stroke="none" />
+    <polygon points="175,54 180,59 186,57 182,62 185,67 179,64 175,68 175,62 170,59 176,58" fill="#ffd84d" stroke="none" />
+  </g>
+
+  <g filter="url(#caughtDrop)">
+    <!-- Striped Raccoon Tail sticking straight up in shock on left! -->
+    <g transform="translate(70, 140) rotate(-28)">
+      <path d="M 0,20 C -25,-10 -35,-40 -20,-75 C -12,-90 12,-85 10,-60 C 8,-35 15,-10 0,20 Z" fill="#242b47" stroke="#141829" stroke-width="2" />
+      <path d="M -16,-70 C -6,-78 8,-74 8,-62 C -2,-56 -14,-58 -16,-70 Z" fill="#f0f4fa" />
+      <path d="M -18,-45 C -8,-52 8,-48 8,-36 C -2,-30 -14,-32 -18,-45 Z" fill="#f0f4fa" />
+      <path d="M -12,-20 C -4,-26 10,-22 10,-10 C 2,-4 -8,-6 -12,-20 Z" fill="#f0f4fa" />
+      <path d="M -20,-75 C -12,-90 12,-85 0,-85 Z" fill="#121524" />
+    </g>
+
+    <!-- Shoulders Tumbled Back into Popcorn -->
+    <path d="M 72,250 C 70,210 110,195 140,195 C 170,195 210,210 208,250 Z" fill="url(#cJacket)" stroke="#1c0b3b" stroke-width="2.5" />
+
+    <!-- Disheveled Magenta Scarf -->
+    <path d="M 115,190 C 130,200 150,200 165,190 C 172,210 145,215 115,190 Z" fill="#e053a8" stroke="#6b154b" stroke-width="1.5" />
+    <path d="M 160,194 C 185,196 205,188 215,178 C 205,185 185,188 165,196 Z" fill="#e053a8" />
+
+    <!-- Rascal's Head -->
+    <!-- Raccoon Ears -->
+    <polygon points="82,90 64,45 102,68" fill="#252c4a" stroke="#131726" stroke-width="2" />
+    <polygon points="83,80 72,55 96,70" fill="#f2ecde" />
+    <polygon points="198,90 216,45 178,68" fill="#252c4a" stroke="#131726" stroke-width="2" />
+    <polygon points="197,80 208,55 184,70" fill="#f2ecde" />
+
+    <!-- Head & Cheeks -->
+    <path d="M 85,120 C 68,140 74,175 105,183 C 125,188 155,188 175,183 C 206,175 212,140 195,120 C 185,105 95,105 85,120 Z" fill="#e8edf7" stroke="#191c2b" stroke-width="2" />
+
+    <!-- Dark Raccoon Mask -->
+    <path d="M 90,136 C 102,130 122,134 134,142 C 146,134 166,130 178,136 C 196,144 196,168 176,168 C 158,168 148,154 140,154 C 132,154 122,168 104,168 C 84,168 84,144 90,136 Z" fill="#1b2138" />
+
+    <!-- Dizzy Cartoon Spiral Eyes! -->
+    <!-- Left Dizzy Eye -->
+    <circle cx="114" cy="148" r="11" fill="#ffffff" stroke="#141724" stroke-width="1.5" />
+    <path d="M 114,148 m -8,0 a 8,8 0 1,0 16,0 a 6,6 0 1,0 -12,0 a 4,4 0 1,0 8,0 a 2,2 0 1,0 -4,0" fill="none" stroke="#2b1b54" stroke-width="2" stroke-linecap="round" />
+    <!-- Cute Eyelashes -->
+    <path d="M 103,140 Q 100,133 104,131" stroke="#120a05" stroke-width="2" stroke-linecap="round" fill="none" />
+    <path d="M 112,136 Q 113,130 117,129" stroke="#120a05" stroke-width="2" stroke-linecap="round" fill="none" />
+
+    <!-- Right Dizzy Eye -->
+    <circle cx="166" cy="148" r="11" fill="#ffffff" stroke="#141724" stroke-width="1.5" />
+    <path d="M 166,148 m 8,0 a 8,8 0 1,0 -16,0 a 6,6 0 1,0 12,0 a 4,4 0 1,0 -8,0 a 2,2 0 1,0 4,0" fill="none" stroke="#2b1b54" stroke-width="2" stroke-linecap="round" />
+    <!-- Cute Eyelashes -->
+    <path d="M 177,140 Q 180,133 176,131" stroke="#120a05" stroke-width="2" stroke-linecap="round" fill="none" />
+    <path d="M 168,136 Q 167,130 163,129" stroke="#120a05" stroke-width="2" stroke-linecap="round" fill="none" />
+
+    <!-- Blushing Rosy Cheeks -->
+    <ellipse cx="94" cy="166" rx="8" ry="5.5" fill="#ff7da7" opacity="0.8" />
+    <ellipse cx="186" cy="166" rx="8" ry="5.5" fill="#ff7da7" opacity="0.8" />
+
+    <!-- Snout, Cute Nose & Silly Sheepish Grin -->
+    <ellipse cx="140" cy="168" rx="15" ry="12" fill="#ffffff" />
+    <polygon points="135,160 145,160 140,165" fill="#1b1d2e" stroke="#1b1d2e" stroke-linejoin="round" stroke-width="2" />
+    <!-- Wavy sheepish mouth line -->
+    <path d="M 130,172 Q 135,178 140,172 Q 145,178 150,172" stroke="#1b1d2e" stroke-width="2.2" stroke-linecap="round" fill="none" />
+    <!-- Playful Tongue Sticking Out -->
+    <path d="M 137,174 C 137,184 147,184 147,174 Z" fill="#ff4d79" stroke="#b01338" stroke-width="1.2" />
+    <line x1="142" y1="174" x2="142" y2="180" stroke="#b01338" stroke-width="1" />
+
+    <!-- Yellow Helmet Knocked Askew (Tilted back-right) -->
+    <g transform="translate(140, 85) rotate(14) translate(-140, -85)">
+      <path d="M 72,95 C 68,35 212,35 208,95 C 204,101 76,101 72,95 Z" fill="url(#cYellowHelmet)" stroke="#9c5d03" stroke-width="3" />
+      <path d="M 68,95 C 100,105 180,105 212,95 C 216,101 206,107 140,109 C 74,107 64,101 68,95 Z" fill="#cf7802" stroke="#784400" stroke-width="2" />
+      <!-- Center Stripe -->
+      <path d="M 133,37 L 132,101 L 148,101 L 147,37 Z" fill="#ffffff" opacity="0.85" />
+      <!-- Popcorn Kernel Stuck on Helmet! -->
+      <circle cx="160" cy="55" r="7" fill="#fff5cb" stroke="#cf961d" stroke-width="1.2" />
+      <circle cx="157" cy="52" r="2" fill="#ffffff" />
+    </g>
+
+    <!-- Huge Mound of Fluffy Popcorn in Foreground (Rascal is sitting in it!) -->
+    <g transform="translate(0, 195)">
+      <!-- Giant heap of buttery popcorn kernels covering bottom -->
+      <circle cx="30" cy="45" r="16" fill="#fff4cb" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="55" cy="40" r="18" fill="#ffe994" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="85" cy="35" r="20" fill="#fff7d9" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="115" cy="42" r="18" fill="#ffe37a" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="140" cy="32" r="22" fill="#fff7d9" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="170" cy="38" r="19" fill="#ffec9e" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="198" cy="34" r="21" fill="#fff4cb" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="225" cy="42" r="18" fill="#ffe687" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="250" cy="48" r="16" fill="#fff7d9" stroke="#c98a18" stroke-width="1.5" />
+
+      <!-- Top layer clusters -->
+      <circle cx="70" cy="22" r="14" fill="#fff5cb" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="98" cy="18" r="15" fill="#ffe994" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="128" cy="15" r="17" fill="#fff7d9" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="158" cy="16" r="16" fill="#ffeb99" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="185" cy="20" r="15" fill="#fff4cb" stroke="#c98a18" stroke-width="1.5" />
+      <circle cx="210" cy="25" r="14" fill="#ffe78c" stroke="#c98a18" stroke-width="1.5" />
+
+      <!-- Paws peeking up out of the popcorn -->
+      <ellipse cx="65" cy="12" rx="10" ry="7" fill="#38226e" stroke="#1d103b" stroke-width="1.5" transform="rotate(-30, 65, 12)" />
+      <ellipse cx="215" cy="12" rx="10" ry="7" fill="#38226e" stroke="#1d103b" stroke-width="1.5" transform="rotate(30, 215, 12)" />
+    </g>
+  </g>
+</svg>

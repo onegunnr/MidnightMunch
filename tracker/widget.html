@@ -1,0 +1,57 @@
+<div id="ytpo" class="w-full space-y-5 text-base">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+    <div class="rounded-xl border border-[var(--viz-border)] bg-[var(--viz-card)] p-3"><div class="text-xs text-[var(--viz-muted)]">Live Playables</div><div class="text-2xl font-semibold">1,591</div></div>
+    <div class="rounded-xl border border-[var(--viz-border)] bg-[var(--viz-card)] p-3"><div class="text-xs text-[var(--viz-muted)]">Added / 7 days</div><div class="text-2xl font-semibold">90</div></div>
+    <div class="rounded-xl border border-[var(--viz-border)] bg-[var(--viz-card)] p-3"><div class="text-xs text-[var(--viz-muted)]">Top 24h gain</div><div class="text-2xl font-semibold">+350K</div></div>
+    <div class="rounded-xl border border-[var(--viz-border)] bg-[var(--viz-card)] p-3"><div class="text-xs text-[var(--viz-muted)]">Tracker date</div><div class="text-lg font-semibold">Sep 16</div></div>
+  </div>
+
+  <div class="rounded-xl border border-[var(--viz-border)] bg-[var(--viz-panel)] p-4">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-3">
+      <div><div class="font-semibold">Current momentum leaders</div><div class="text-sm text-[var(--viz-muted)]">24-hour play gain; mechanic labels are heuristic</div></div>
+      <select id="filter" class="rounded-lg border border-[var(--viz-border)] bg-transparent px-3 py-2 text-base">
+        <option value="all">All mechanics</option><option>Puzzle</option><option>DIY</option><option>Arcade</option><option>Runner</option><option>Action</option><option>Merge</option>
+      </select>
+    </div>
+    <div id="rows" class="space-y-2"></div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div class="rounded-xl border border-[var(--viz-border)] p-4">
+      <div class="font-semibold mb-2">Fresh breakout watch</div>
+      <div class="text-sm space-y-2">
+        <div class="flex justify-between gap-3"><span>Car vs Cop <span class="text-[var(--viz-muted)]">Racing</span></span><strong>122K</strong></div>
+        <div class="flex justify-between gap-3"><span>Fashion Merge <span class="text-[var(--viz-muted)]">Puzzle</span></span><strong>55K</strong></div>
+        <div class="flex justify-between gap-3"><span>Slime Maker <span class="text-[var(--viz-muted)]">Simulation</span></span><strong>20K</strong></div>
+        <div class="flex justify-between gap-3"><span>Draw the Path <span class="text-[var(--viz-muted)]">Puzzle</span></span><strong>15K</strong></div>
+      </div>
+      <div class="mt-3 text-xs text-[var(--viz-muted)]">These were among games newly observed Sep 14–15, 2026. Total plays shown, not 24h gain.</div>
+    </div>
+
+    <div class="rounded-xl border border-[var(--viz-border)] p-4">
+      <div class="font-semibold mb-2">Prototype signal</div>
+      <div id="signal" class="text-sm leading-6">Puzzle, transformation/DIY, simple arcade movement and merge mechanics deserve continued monitoring. Select a mechanic above to isolate its current examples.</div>
+      <button id="idea" type="button" class="mt-3 min-h-11 rounded-lg bg-[var(--viz-accent-bg)] px-4 py-2 font-medium text-[var(--viz-text)]">Generate prototype brief</button>
+      <div id="brief" class="mt-3 text-sm text-[var(--viz-muted)]" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div class="rounded-xl border border-[var(--viz-border)] p-4">
+    <div class="font-semibold">Daily agent scoring model</div>
+    <div class="mt-2 grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+      <div><strong>50% Momentum</strong><br><span class="text-[var(--viz-muted)]">24h / 7d play growth</span></div>
+      <div><strong>30% Freshness</strong><br><span class="text-[var(--viz-muted)]">young games growing fast</span></div>
+      <div><strong>20% Competition</strong><br><span class="text-[var(--viz-muted)]">penalize crowded mechanics</span></div>
+    </div>
+    <div class="mt-3 text-xs text-[var(--viz-muted)]">Agent output: RISING MECHANICS → GAMES TO STUDY → PROTOTYPE OPPORTUNITIES. Never clone art, branding, levels, characters, or substantially identical game builds.</div>
+  </div>
+
+<script>
+(()=>{const root=document.getElementById('ytpo');if(root.dataset.init)return;root.dataset.init='1';
+const games=[
+['Tricky Minds: Brainy Puzzle','Puzzle',350],['Phone Case DIY','DIY',350],['Snake Clash!','Arcade',340],['Hole.io','Arcade',320],['Going Balls','Runner',290],['Dessert DIY','DIY',280],['Build a Queen','Runner',270],['Brain Up: Tricky Quiz','Puzzle',260],['Draw Fly','Puzzle',240],['Bridge Race','Runner',240],['Tiger Tank','Action',237],['Ragdoll Gun Shooter!','Action',230],['Stealth Master','Action',220],['Sculpt People','DIY',210],['Jelly Run 2048','Merge',200]
+];
+const rows=root.querySelector('#rows'),filter=root.querySelector('#filter'),brief=root.querySelector('#brief');
+function render(){const f=filter.value;rows.innerHTML='';games.filter(g=>f==='all'||g[1]===f).forEach((g,i)=>{const d=document.createElement('div');d.className='grid grid-cols-[1fr_auto] gap-3 items-center rounded-lg border border-[var(--viz-border)] px-3 py-2';const pct=Math.round(g[2]/350*100);d.innerHTML='<div class="min-w-0"><div class="font-medium truncate">'+g[0]+'</div><div class="text-xs text-[var(--viz-muted)]">'+g[1]+'</div><div class="mt-1 h-1.5 rounded bg-[var(--viz-card)] overflow-hidden"><div class="h-full bg-[var(--viz-series-2)]" style="width:'+pct+'%"></div></div></div><div class="font-semibold whitespace-nowrap">+'+g[2]+'K</div>';rows.appendChild(d)});}
+filter.addEventListener('change',render);root.querySelector('#idea').addEventListener('click',()=>{const f=filter.value;const type=f==='all'?'Puzzle':f;const ideas={Puzzle:'30-level one-touch physics puzzle: move or draw one object to solve each 10–20 second challenge. Add streak scoring and optional rewarded hints.',DIY:'Fast transformation game: complete a 3-step customization task, earn a rating, unlock new tools and increasingly unusual requests.',Arcade:'One-finger arena game: absorb smaller objects, avoid larger hazards, and grow for 60 seconds. Add short missions and score chasing.',Runner:'One-touch lane runner with visible transformation: collect upgrades, avoid downgrades, and reach a final multiplier challenge.',Action:'Short-session action challenge with one primary input, escalating waves, upgrade choices every 30 seconds, and score-based replay.',Merge:'Merge-and-upgrade loop with a strong visual payoff, 2–3 minute sessions, discovery milestones, and optional rewarded boosts.'};brief.textContent=(ideas[type]||ideas.Puzzle)+' Build the mechanic, not a copy of an existing title.';});render();})();
+</script></div>

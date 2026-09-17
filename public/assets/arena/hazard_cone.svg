@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-24 -24 48 48" width="48" height="48">
+  <defs>
+    <radialGradient id="rubberBase" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#242b3b" />
+      <stop offset="85%" stop-color="#12151e" />
+      <stop offset="100%" stop-color="#080a0f" />
+    </radialGradient>
+    <linearGradient id="coneGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ff792e" />
+      <stop offset="50%" stop-color="#ff5511" />
+      <stop offset="100%" stop-color="#c93700" />
+    </linearGradient>
+    <filter id="coneShadow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#090a14" flood-opacity="0.6" />
+    </filter>
+  </defs>
+
+  <g filter="url(#coneShadow)">
+    <!-- Hexagonal Rubber Base -->
+    <polygon points="-18,-10 0,-20 18,-10 18,10 0,20 -18,10" fill="url(#rubberBase)" stroke="#394254" stroke-width="1.2" />
+
+    <!-- Outer Orange Cone Ring -->
+    <circle cx="0" cy="0" r="14" fill="url(#coneGrad)" stroke="#8f2700" stroke-width="1.2" />
+
+    <!-- Reflective White Collar -->
+    <circle cx="0" cy="0" r="9.5" fill="#f4f6fa" stroke="#b0b8c9" stroke-width="1" />
+
+    <!-- Inner Orange Cone Tip -->
+    <circle cx="0" cy="0" r="5.5" fill="url(#coneGrad)" stroke="#8f2700" stroke-width="1" />
+
+    <!-- Cone Top Hole / Ring -->
+    <circle cx="0" cy="0" r="2.2" fill="#242b3b" />
+
+    <!-- Subtle Specular Sheen -->
+    <path d="M -8,-6 C -4,-12 4,-12 8,-6" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.6" />
+  </g>
+</svg>

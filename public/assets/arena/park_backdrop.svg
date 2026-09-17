@@ -1,0 +1,235 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720" width="1280" height="720">
+  <defs>
+    <!-- Midnight Sky Gradients -->
+    <linearGradient id="nightSky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#09071c" />
+      <stop offset="35%" stop-color="#140f38" />
+      <stop offset="70%" stop-color="#24174d" />
+      <stop offset="100%" stop-color="#371d63" />
+    </linearGradient>
+
+    <!-- Carnival Moon Radial Glow -->
+    <radialGradient id="carnivalMoon" cx="38%" cy="36%" r="62%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="40%" stop-color="#fff4b8" />
+      <stop offset="75%" stop-color="#f5c842" />
+      <stop offset="100%" stop-color="#d68c0b" />
+    </radialGradient>
+
+    <radialGradient id="moonAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd55a" stop-opacity="0.35" />
+      <stop offset="50%" stop-color="#ff9944" stop-opacity="0.12" />
+      <stop offset="100%" stop-color="#171040" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Night Clouds Gradient -->
+    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#261750" stop-opacity="0.4" />
+      <stop offset="50%" stop-color="#3f2378" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#221347" stop-opacity="0.3" />
+    </linearGradient>
+
+    <!-- Lighting Filters -->
+    <filter id="neonGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="5" flood-color="#ffd859" flood-opacity="0.8" />
+    </filter>
+    <filter id="cyanGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#4de8dc" flood-opacity="0.75" />
+    </filter>
+    <filter id="pinkGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#ff5983" flood-opacity="0.75" />
+    </filter>
+  </defs>
+
+  <!-- Deep Midnight Sky -->
+  <rect x="0" y="0" width="1280" height="720" fill="url(#nightSky)" />
+
+  <!-- Twinkling Stars & Nebula Field -->
+  <g fill="#ffffff">
+    <!-- Bright primary stars -->
+    <circle cx="85" cy="70" r="2.2" opacity="0.9" />
+    <circle cx="190" cy="45" r="1.8" opacity="0.85" />
+    <circle cx="270" cy="115" r="1.5" opacity="0.7" />
+    <circle cx="380" cy="60" r="2" opacity="0.8" />
+    <circle cx="490" cy="35" r="1.6" opacity="0.75" />
+    <circle cx="580" cy="85" r="2.2" opacity="0.9" />
+    <circle cx="670" cy="50" r="1.4" opacity="0.7" />
+    <circle cx="780" cy="75" r="2" opacity="0.85" />
+    <circle cx="890" cy="30" r="1.7" opacity="0.8" />
+    <circle cx="980" cy="95" r="1.5" opacity="0.75" />
+    <circle cx="1060" cy="40" r="2.2" opacity="0.9" />
+    <circle cx="1180" cy="65" r="1.8" opacity="0.85" />
+    <circle cx="1240" cy="110" r="1.5" opacity="0.7" />
+
+    <!-- Secondary faint stars -->
+    <circle cx="130" cy="130" r="1" opacity="0.5" />
+    <circle cx="230" cy="85" r="1.2" opacity="0.55" />
+    <circle cx="340" cy="140" r="1" opacity="0.45" />
+    <circle cx="440" cy="95" r="1.1" opacity="0.5" />
+    <circle cx="540" cy="150" r="1" opacity="0.4" />
+    <circle cx="720" cy="110" r="1.2" opacity="0.5" />
+    <circle cx="830" cy="135" r="1" opacity="0.45" />
+    <circle cx="930" cy="70" r="1.2" opacity="0.5" />
+    <circle cx="1130" cy="120" r="1" opacity="0.45" />
+  </g>
+
+  <!-- Big Glowing Amusement Park Moon -->
+  <circle cx="170" cy="130" r="115" fill="url(#moonAura)" />
+  <circle cx="170" cy="130" r="62" fill="url(#carnivalMoon)" filter="url(#neonGlow)" />
+  <!-- Moon Craters -->
+  <circle cx="185" cy="115" r="10" fill="#cf7e08" opacity="0.22" />
+  <circle cx="152" cy="148" r="7" fill="#cf7e08" opacity="0.2" />
+  <circle cx="195" cy="144" r="5.5" fill="#cf7e08" opacity="0.18" />
+
+  <!-- Atmospheric Night Clouds -->
+  <path d="M -20,180 Q 90,140 220,165 Q 360,190 480,160 Q 600,130 740,165 Q 900,200 1060,155 Q 1180,120 1300,160 L 1300,230 L -20,230 Z" fill="url(#cloudGrad)" />
+  <path d="M 120,210 Q 260,170 420,195 Q 580,220 740,185 Q 900,150 1080,190 Q 1200,210 1320,180 L 1320,260 L 120,260 Z" fill="url(#cloudGrad)" opacity="0.6" />
+
+  <!-- Distant Roller Coaster Structure -->
+  <g stroke="#39246b" fill="none" opacity="0.88">
+    <!-- Big Drop Arch Track -->
+    <path d="M 620,540 C 720,240 820,180 890,320 C 940,420 1000,220 1100,270 C 1180,310 1220,440 1280,500" stroke-width="7" stroke="#4f2f8f" />
+    <path d="M 620,546 C 720,246 820,186 890,326 C 940,426 1000,226 1100,276 C 1180,316 1220,446 1280,506" stroke-width="2.5" stroke="#754ac4" />
+    
+    <!-- Support Trestle Pillars -->
+    <line x1="770" y1="225" x2="770" y2="540" stroke-width="3" />
+    <line x1="820" y1="220" x2="820" y2="540" stroke-width="3" />
+    <line x1="865" y1="280" x2="865" y2="540" stroke-width="3" />
+    <line x1="915" y1="380" x2="915" y2="540" stroke-width="3" />
+    <line x1="970" y1="300" x2="970" y2="540" stroke-width="3" />
+    <line x1="1025" y1="240" x2="1025" y2="540" stroke-width="3" />
+    <line x1="1080" y1="265" x2="1080" y2="540" stroke-width="3" />
+    <line x1="1150" y1="340" x2="1150" y2="540" stroke-width="3" />
+    
+    <!-- Cross Braces -->
+    <line x1="770" y1="300" x2="820" y2="400" stroke-width="1.8" />
+    <line x1="820" y1="300" x2="770" y2="400" stroke-width="1.8" />
+    <line x1="770" y1="400" x2="820" y2="500" stroke-width="1.8" />
+    <line x1="820" y1="400" x2="770" y2="500" stroke-width="1.8" />
+    <line x1="970" y1="340" x2="1025" y2="440" stroke-width="1.8" />
+    <line x1="1025" y1="340" x2="970" y2="440" stroke-width="1.8" />
+    <line x1="1025" y1="340" x2="1080" y2="440" stroke-width="1.8" />
+    <line x1="1080" y1="340" x2="1025" y2="440" stroke-width="1.8" />
+  </g>
+
+  <!-- Roller Coaster Running Warning Lights -->
+  <g fill="#ffea78" opacity="0.95">
+    <circle cx="730" cy="285" r="3" filter="url(#neonGlow)" />
+    <circle cx="770" cy="226" r="3" filter="url(#neonGlow)" />
+    <circle cx="815" cy="216" r="3" filter="url(#neonGlow)" />
+    <circle cx="860" cy="265" r="3" filter="url(#neonGlow)" />
+    <circle cx="900" cy="360" r="3" filter="url(#neonGlow)" />
+    <circle cx="945" cy="370" r="3" filter="url(#neonGlow)" />
+    <circle cx="990" cy="275" r="3" filter="url(#neonGlow)" />
+    <circle cx="1035" cy="245" r="3" filter="url(#neonGlow)" />
+    <circle cx="1080" cy="268" r="3" filter="url(#neonGlow)" />
+    <circle cx="1135" cy="325" r="3" filter="url(#neonGlow)" />
+  </g>
+
+  <!-- Ferris Wheel Support A-Frames (Base tower only — the wheel itself is animated dynamically by the engine!) -->
+  <g transform="translate(1080, 240)">
+    <!-- Heavy-duty Steel A-Frame Support Legs -->
+    <polygon points="0,0 -85,280 -65,280 -5,40" fill="#241445" stroke="#482b7d" stroke-width="3" />
+    <polygon points="0,0 85,280 65,280 5,40" fill="#241445" stroke="#482b7d" stroke-width="3" />
+    <line x1="-55" y1="180" x2="55" y2="180" stroke="#5d3999" stroke-width="4" />
+    <line x1="-35" y1="100" x2="35" y2="100" stroke="#5d3999" stroke-width="3" />
+    <!-- Center Axle Hub Bearing -->
+    <circle cx="0" cy="0" r="24" fill="#ffb82e" stroke="#681c3c" stroke-width="4" />
+    <circle cx="0" cy="0" r="12" fill="#241445" />
+  </g>
+
+  <!-- Circus Marquee Tents (Left Side: X=0 to 330) -->
+  <g opacity="0.95">
+    <!-- Giant Big-Top Circus Tent -->
+    <polygon points="10,500 135,280 260,500" fill="#321757" stroke="#562c8a" stroke-width="3.5" />
+    <!-- Striped Red & Golden Swags on Roof -->
+    <polygon points="135,280 80,500 105,500 135,280" fill="#ff4d6d" opacity="0.75" />
+    <polygon points="135,280 165,500 190,500 135,280" fill="#ffcf47" opacity="0.8" />
+    <!-- Flagpole & Pennant -->
+    <line x1="135" y1="280" x2="135" y2="245" stroke="#ffd65a" stroke-width="2.5" />
+    <polygon points="135,245 175,257 135,270" fill="#4de8dc" filter="url(#cyanGlow)" />
+
+    <!-- Secondary Tent -->
+    <polygon points="-50,540 60,370 170,540" fill="#23103d" stroke="#6a3ba6" stroke-width="3" />
+    <polygon points="60,370 20,540 40,540 60,370" fill="#ff5e7e" opacity="0.7" />
+    <polygon points="60,370 80,540 100,540 60,370" fill="#ffe066" opacity="0.75" />
+    <line x1="60" y1="370" x2="60" y2="340" stroke="#ffd65a" stroke-width="2" />
+    <polygon points="60,340 95,350 60,362" fill="#ff4d6d" />
+  </g>
+
+  <!-- Festive Festoon Carnival Garland Cables Draped Overhead -->
+  <g fill="none">
+    <path d="M 0,85 Q 320,165 640,110 Q 960,170 1280,80" stroke="#1f1638" stroke-width="2.5" />
+    <path d="M 0,130 Q 300,215 620,165 Q 940,225 1280,125" stroke="#1f1638" stroke-width="2" />
+  </g>
+
+  <!-- Glowing Carnival Garlands Bulbs along Cables -->
+  <g>
+    <!-- Cable 1 Bulbs -->
+    <circle cx="80" cy="115" r="5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="160" cy="136" r="5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="240" cy="150" r="5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="320" cy="152" r="5" fill="#c06bff" />
+    <circle cx="400" cy="146" r="5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="480" cy="135" r="5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="560" cy="122" r="5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="640" cy="110" r="5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="720" cy="124" r="5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="800" cy="142" r="5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="880" cy="154" r="5" fill="#c06bff" />
+    <circle cx="960" cy="155" r="5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="1040" cy="144" r="5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="1120" cy="125" r="5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="1200" cy="104" r="5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+
+    <!-- Cable 2 Bulbs -->
+    <circle cx="60" cy="155" r="4.5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="140" cy="180" r="4.5" fill="#c06bff" />
+    <circle cx="220" cy="198" r="4.5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="300" cy="204" r="4.5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="380" cy="198" r="4.5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="460" cy="184" r="4.5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="540" cy="172" r="4.5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="620" cy="165" r="4.5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="700" cy="178" r="4.5" fill="#c06bff" />
+    <circle cx="780" cy="196" r="4.5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="860" cy="208" r="4.5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="940" cy="210" r="4.5" fill="#ffcf47" filter="url(#neonGlow)" />
+    <circle cx="1020" cy="196" r="4.5" fill="#ff4d6d" filter="url(#pinkGlow)" />
+    <circle cx="1100" cy="174" r="4.5" fill="#4de8dc" filter="url(#cyanGlow)" />
+    <circle cx="1180" cy="148" r="4.5" fill="#ffcf47" filter="url(#neonGlow)" />
+  </g>
+
+  <!-- Lower Boardwalk & Carnival Promenade Buildings (Y=520 to 720) -->
+  <rect x="0" y="520" width="1280" height="200" fill="#130d29" />
+  <rect x="0" y="516" width="1280" height="5" fill="#4c2780" />
+
+  <!-- Carnival Kiosks & Snack Shacks -->
+  <g>
+    <!-- Kiosk 1: Popcorn Palace on Left -->
+    <rect x="35" y="450" width="190" height="70" fill="#241340" stroke="#482873" stroke-width="2" />
+    <polygon points="25,450 235,450 215,410 45,410" fill="#ff4d6d" />
+    <!-- White Awning Stripes -->
+    <polygon points="45,410 75,450 55,450 35,410" fill="#ffffff" opacity="0.65" />
+    <polygon points="85,410 115,450 95,450 75,410" fill="#ffffff" opacity="0.65" />
+    <polygon points="125,410 155,450 135,450 115,410" fill="#ffffff" opacity="0.65" />
+    <polygon points="165,410 195,450 175,450 155,410" fill="#ffffff" opacity="0.65" />
+    <polygon points="205,410 235,450 215,450 195,410" fill="#ffffff" opacity="0.65" />
+    <!-- Glowing Sign -->
+    <rect x="70" y="468" width="120" height="28" rx="6" fill="#180e2b" stroke="#ffd65a" stroke-width="1.8" />
+    <text x="130" y="487" font-family="Arial, sans-serif" font-weight="900" font-size="13" fill="#ffcf47" text-anchor="middle" letter-spacing="1.5">🍿 POPCORN</text>
+
+    <!-- Kiosk 2: Sweet Treats on Right -->
+    <rect x="1055" y="455" width="190" height="65" fill="#241340" stroke="#482873" stroke-width="2" />
+    <polygon points="1045,455 1255,455 1235,415 1065,415" fill="#4de8dc" />
+    <!-- White Awning Stripes -->
+    <polygon points="1065,415 1095,455 1075,455 1055,415" fill="#ffffff" opacity="0.65" />
+    <polygon points="1105,415 1135,455 1115,455 1095,415" fill="#ffffff" opacity="0.65" />
+    <polygon points="1145,415 1175,455 1155,455 1135,415" fill="#ffffff" opacity="0.65" />
+    <polygon points="1185,415 1215,455 1195,455 1175,415" fill="#ffffff" opacity="0.65" />
+    <polygon points="1225,415 1255,455 1235,455 1215,415" fill="#ffffff" opacity="0.65" />
+    <!-- Glowing Sign -->
+    <rect x="1090" y="472" width="120" height="28" rx="6" fill="#180e2b" stroke="#4de8dc" stroke-width="1.8" />
+    <text x="1150" y="491" font-family="Arial, sans-serif" font-weight="900" font-size="13" fill="#7cfbe1" text-anchor="middle" letter-spacing="1.5">★ DONUTS ★</text>
+  </g>
+</svg>

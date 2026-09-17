@@ -1,0 +1,181 @@
+{
+  "snapshot_date": "2026-09-16",
+  "ecosystem_stats": {
+    "total_live_playables": 1591,
+    "new_games_7d": 90,
+    "top_24h_gain": 350000
+  },
+  "games": [
+    {
+      "name": "Tricky Minds: Brainy Puzzle",
+      "genre": "Puzzle",
+      "mechanic": "Brain quiz / Lateral logic",
+      "daily_gain_est": 350000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Phone Case DIY",
+      "genre": "DIY / Simulation",
+      "mechanic": "Satisfying crafting / Multi-step transformation",
+      "daily_gain_est": 350000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Snake Clash!",
+      "genre": "Arcade",
+      "mechanic": "Grow/absorb / .io arena",
+      "daily_gain_est": 340000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Hole.io",
+      "genre": "Arcade",
+      "mechanic": "Grow/absorb / Physics destruction",
+      "daily_gain_est": 320000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Going Balls",
+      "genre": "Runner / Arcade",
+      "mechanic": "Physics rolling / Obstacle evasion",
+      "daily_gain_est": 290000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Dessert DIY",
+      "genre": "DIY / Simulation",
+      "mechanic": "Multi-step transformation / ASMR cooking",
+      "daily_gain_est": 280000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Build a Queen",
+      "genre": "Runner",
+      "mechanic": "Gate selection / Aesthetic morphing",
+      "daily_gain_est": 270000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Brain Up: Tricky Quiz",
+      "genre": "Puzzle",
+      "mechanic": "Brain quiz / Trick choices",
+      "daily_gain_est": 260000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Draw Fly",
+      "genre": "Physics puzzle",
+      "mechanic": "Draw line physics / Path deflection",
+      "daily_gain_est": 240000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Bridge Race",
+      "genre": "Runner / Strategy",
+      "mechanic": "Resource collection / Path building",
+      "daily_gain_est": 240000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Tiger Tank",
+      "genre": "Action",
+      "mechanic": "Top-down shooter / Arena combat",
+      "daily_gain_est": 237000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Ragdoll Gun Shooter!",
+      "genre": "Action",
+      "mechanic": "Ragdoll physics / Timing shot",
+      "daily_gain_est": 230000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Stealth Master",
+      "genre": "Action",
+      "mechanic": "Stealth navigation / Timing attack",
+      "daily_gain_est": 220000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Sculpt People",
+      "genre": "DIY / Simulation",
+      "mechanic": "Mesh deformation / Clay shaping",
+      "daily_gain_est": 210000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Jelly Run 2048",
+      "genre": "Merge / Runner",
+      "mechanic": "Split & merge runner / 2048 math",
+      "daily_gain_est": 200000,
+      "total_plays_est": null,
+      "date_observed": "2026-09-16",
+      "status": "momentum_leader"
+    },
+    {
+      "name": "Car vs Cop",
+      "genre": "Racing / Arcade",
+      "mechanic": "Drift avoidance / Tight turning survival",
+      "daily_gain_est": null,
+      "total_plays_est": 122000,
+      "date_observed": "2026-09-14",
+      "status": "fresh_breakout"
+    },
+    {
+      "name": "Fashion Merge",
+      "genre": "Puzzle / Merge",
+      "mechanic": "Item merge / Dress-up meta",
+      "daily_gain_est": null,
+      "total_plays_est": 55000,
+      "date_observed": "2026-09-15",
+      "status": "fresh_breakout"
+    },
+    {
+      "name": "Slime Maker",
+      "genre": "Simulation / DIY",
+      "mechanic": "ASMR squish / Tactile mixing",
+      "daily_gain_est": null,
+      "total_plays_est": 20000,
+      "date_observed": "2026-09-15",
+      "status": "fresh_breakout"
+    },
+    {
+      "name": "Draw the Path",
+      "genre": "Physics puzzle",
+      "mechanic": "Draw line path / Object delivery",
+      "daily_gain_est": null,
+      "total_plays_est": 15000,
+      "date_observed": "2026-09-15",
+      "status": "fresh_breakout"
+    }
+  ]
+}
